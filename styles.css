@@ -1,0 +1,265 @@
+:root {
+  --primary: #2D3436;
+  --primary-light: #636E72;
+  --accent: #A8A8A8;
+  --bg: #F7F7F7;
+  --white: #FFFFFF;
+  --error: #E17055;
+  --border: #DFE6E9;
+  --shadow: rgba(0, 0, 0, 0.06);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg);
+  color: var(--primary);
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 700px;
+  margin: 30px auto;
+  background: var(--white);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px var(--shadow);
+}
+
+h2 {
+  color: var(--primary);
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-bottom: 24px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--primary);
+  font-size: 15px;
+}
+
+.input-group {
+  display: flex;
+  gap: 12px;
+}
+
+select, input, .food-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  background-color: var(--white);
+  color: var(--primary);
+}
+
+select:hover, input:hover, .food-input:hover {
+  border-color: var(--primary-light);
+}
+
+select:focus, input:focus, .food-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(45, 52, 54, 0.1);
+}
+
+button {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.result {
+  margin-top: 30px;
+  padding: 24px;
+  border-radius: 8px;
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.result p {
+  margin: 12px 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.result p strong {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 12px 24px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--accent);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary);
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.tab.active {
+  color: var(--primary);
+}
+
+.tab.active::after {
+  transform: scaleX(1);
+}
+
+.tab:hover {
+  color: var(--primary);
+}
+
+.calculator-section {
+  display: none;
+}
+
+.calculator-section.active {
+  display: block;
+}
+
+.food-input {
+  min-height: 120px;
+  resize: vertical;
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-family: inherit;
+}
+
+.nutrition-result {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.nutrition-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.nutrition-card h3 {
+  color: var(--primary);
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.nutrition-card .value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.nutrition-card .unit {
+  font-size: 13px;
+  color: var(--primary-light);
+}
+
+.loading {
+  display: none;
+  text-align: center;
+  padding: 24px;
+}
+
+.loading::after {
+  content: "Analyzing...";
+  color: var(--primary);
+  font-weight: 500;
+}
+
+#foodResult {
+  margin-top: 24px;
+}
+
+.error-message {
+  color: var(--error);
+  text-align: center;
+  margin: 16px 0;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: rgba(225, 112, 85, 0.1);
+  border: 1px solid rgba(225, 112, 85, 0.2);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 24px;
+    margin: 15px auto;
+  }
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nutrition-result {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tab {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+} 
