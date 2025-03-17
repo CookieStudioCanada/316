@@ -613,7 +613,7 @@ body {
 }
 
 .plan-header.moderate {
-  background: linear-gradient(135deg, #a8e6cf, #3dc1a5);
+  background: linear-gradient(135deg, var(--bg), var(--primary-light));
 }
 
 .plan-header.aggressive {
