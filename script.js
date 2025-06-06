@@ -1,482 +1,650 @@
-// Initialize Bootstrap components
-document.addEventListener('DOMContentLoaded', () => {
-  // Add form submission handlers
-  document.getElementById('deficitForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (e.target.checkValidity()) {
-      calculateDeficit();
-    }
-    e.target.classList.add('was-validated');
-  });
+// Food Items Management System
+class FoodTracker {
+  constructor() {
+    this.foodItems = this.loadFromStorage() || [];
+    this.initializeEventListeners();
+    this.updateDisplay();
+  }
 
-  document.getElementById('foodForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (e.target.checkValidity()) {
-      analyzeFoodIntake();
-    }
-    e.target.classList.add('was-validated');
-  });
+  // Storage methods
+  saveToStorage() {
+    localStorage.setItem('nutritionTracker', JSON.stringify(this.foodItems));
+  }
 
-  // Initialize help modal content
-  const helpContent = document.querySelector('.nutrition-help-content');
-  if (helpContent) {
-    let modalHtml = `
-      <div class="help-intro mb-4">
-        <h4 class="help-intro-title">
-          <i class="bi bi-info-circle"></i>
-          Understanding Your Nutrition
-        </h4>
-        <p class="help-intro-text">
-          Welcome to your comprehensive nutrition guide! This calculator helps you understand your daily caloric needs
-          and provides personalized weight management plans. Below you'll find detailed information about each nutritional
-          component and recommended values based on scientific research and health guidelines.
-        </p>
-        <div class="help-quick-tips">
-          <h5><i class="bi bi-lightning"></i> Quick Tips:</h5>
-          <ul>
-            <li>Your caloric needs are unique to your body and lifestyle</li>
-            <li>Choose a sustainable plan that fits your daily routine</li>
-            <li>Combine diet changes with regular physical activity</li>
-            <li>Monitor your progress and adjust as needed</li>
-          </ul>
-        </div>
-      </div>
-      <div class="accordion" id="nutritionAccordion">
-    `;
+  loadFromStorage() {
+    const data = localStorage.getItem('nutritionTracker');
+    if (!data) return [];
     
-    Object.entries(nutritionGuide).forEach(([key, info], index) => {
-      modalHtml += `
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button ${index !== 0 ? 'collapsed' : ''}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${key}" aria-expanded="${index === 0}">
-              ${info.title}
-            </button>
-          </h2>
-          <div id="collapse${key}" class="accordion-collapse collapse ${index === 0 ? 'show' : ''}" data-bs-parent="#nutritionAccordion">
-            <div class="accordion-body">
-              <p class="mb-3">${info.description}</p>
-              <p class="fw-medium mb-2">${info.recommendations.general}</p>
-              <ul class="mb-3">
-                ${info.recommendations.ranges.map(range => `<li>${range}</li>`).join('')}
-              </ul>
-              <p class="fst-italic mb-0"><strong>Tip:</strong> ${info.recommendations.tips}</p>
-            </div>
-          </div>
+    const items = JSON.parse(data);
+    
+    // Ensure all items have the required fields (fix legacy data)
+    return items.map(item => ({
+      id: item.id,
+      item: item.item,
+      quantity: item.quantity,
+      calories: Number(item.calories) || 0,
+      protein: Number(item.protein) || 0,
+      carbs: Number(item.carbs) || 0,
+      fat: Number(item.fat) || 0,
+      fiber: Number(item.fiber) || 0,
+      sugar: Number(item.sugar) || 0,
+      saturatedFat: Number(item.saturatedFat) || 0,
+      sodium: Number(item.sodium) || 0,
+      source: item.source || 'unknown',
+      timestamp: item.timestamp || new Date().toISOString()
+    }));
+  }
+
+  // Initialize all event listeners
+  initializeEventListeners() {
+    // AI Analysis form
+    document.getElementById('foodForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (e.target.checkValidity()) {
+        this.analyzeFoodIntake();
+      }
+      e.target.classList.add('was-validated');
+    });
+
+    // Manual add form
+    document.getElementById('manualAddForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (e.target.checkValidity()) {
+        this.addManualItem();
+      }
+      e.target.classList.add('was-validated');
+    });
+
+    // Calorie deficit form
+    document.getElementById('deficitForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (e.target.checkValidity()) {
+        this.calculateDeficit();
+      }
+      e.target.classList.add('was-validated');
+    });
+  }
+
+  // Add item manually
+  addManualItem() {
+    const item = {
+      id: Date.now(),
+      item: document.getElementById('itemName').value,
+      quantity: '1 serving',
+      calories: parseFloat(document.getElementById('itemCalories').value) || 0,
+      protein: parseFloat(document.getElementById('itemProtein').value) || 0,
+      carbs: parseFloat(document.getElementById('itemCarbs').value) || 0,
+      fat: parseFloat(document.getElementById('itemFat').value) || 0,
+      fiber: parseFloat(document.getElementById('itemFiber')?.value) || 0,
+      sugar: parseFloat(document.getElementById('itemSugar')?.value) || 0,
+      saturatedFat: parseFloat(document.getElementById('itemSaturatedFat')?.value) || 0,
+      sodium: parseFloat(document.getElementById('itemSodium')?.value) || 0,
+      source: 'manual',
+      timestamp: new Date().toISOString()
+    };
+
+    this.foodItems.push(item);
+    this.saveToStorage();
+    this.updateDisplay();
+    this.clearManualForm();
+    this.showSuccessMessage('Item added successfully!');
+  }
+
+  // Submit manual form from modal
+  submitManualForm() {
+    const form = document.getElementById('manualAddForm');
+    if (form.checkValidity()) {
+      this.addManualItem();
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('manualAddModal'));
+      modal.hide();
+    } else {
+      form.classList.add('was-validated');
+    }
+  }
+
+  // Clear manual form
+  clearManualForm() {
+    document.getElementById('manualAddForm').reset();
+    document.getElementById('manualAddForm').classList.remove('was-validated');
+  }
+
+  // AI Analysis
+  async analyzeFoodIntake() {
+    const foodInput = document.getElementById('foodInput').value.trim();
+    
+    if (!foodInput) {
+      this.showError('Please enter what you ate today.');
+      return;
+    }
+
+    this.showLoading(true);
+
+    try {
+      const response = await fetch('https://analyzenutrition-ik32xiclqq-uc.a.run.app', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: foodInput }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to analyze food intake');
+      }
+
+      const result = await response.json();
+      this.processAIResults(result);
+      document.getElementById('foodInput').value = '';
+      document.getElementById('foodForm').classList.remove('was-validated');
+      
+    } catch (error) {
+      this.showError('Failed to analyze food intake. Please try again.');
+    } finally {
+      this.showLoading(false);
+    }
+  }
+
+  // Process AI results and add items
+  processAIResults(response) {
+    const data = response.data;
+    let addedCount = 0;
+
+    if (data.itemizedList && data.itemizedList.length > 0) {
+      // Add individual items (now with complete nutrition data)
+      data.itemizedList.forEach(aiItem => {
+        const item = {
+          id: Date.now() + Math.random(),
+          item: aiItem.item,
+          quantity: '1 serving', // You could parse this from the item name if needed
+          calories: Number(aiItem.calories) || 0,
+          protein: Number(aiItem.protein) || 0,
+          carbs: Number(aiItem.carbs) || 0,
+          fat: Number(aiItem.fat) || 0,
+          fiber: Number(aiItem.fiber) || 0,
+          sugar: Number(aiItem.sugar) || 0,
+          saturatedFat: Number(aiItem.saturatedFat) || 0,
+          sodium: Number(aiItem.sodium) || 0,
+          source: 'ai',
+          timestamp: new Date().toISOString()
+        };
+        
+        this.foodItems.push(item);
+        addedCount++;
+      });
+
+      this.saveToStorage();
+      this.updateDisplay();
+      
+      this.showSuccessMessage(`Successfully added ${addedCount} food items with complete nutrition data from smart analysis!`);
+      
+    } else {
+      this.showError('No food items were identified in your description. Try being more specific.');
+    }
+  }
+
+  // Update all displays
+  updateDisplay() {
+    this.updateItemsList();
+    this.updateTotals();
+    this.updateItemCount();
+  }
+
+  // Update items list
+  updateItemsList() {
+    const container = document.getElementById('foodItemsList');
+    
+    if (this.foodItems.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state text-center py-5">
+          <i class="bi bi-bowl display-4 text-muted mb-3"></i>
+          <p class="text-muted">No food items added yet. Use smart analysis or add items manually above.</p>
         </div>
       `;
+      return;
+    }
+
+    const html = `
+      <div class="food-items-grid">
+        ${this.foodItems.map(item => this.createItemCard(item)).join('')}
+      </div>
+    `;
+    container.innerHTML = html;
+  }
+
+  // Create individual item card
+  createItemCard(item) {
+    return `
+      <div class="food-item-card mb-3" data-id="${item.id}">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div class="flex-grow-1">
+                <h6 class="card-title mb-1">
+                  ${item.item}
+                </h6>
+              </div>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-primary" onclick="foodTracker.editItem(${item.id})" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-outline-danger" onclick="foodTracker.deleteItem(${item.id})" title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="nutrition-mini-grid">
+              ${item.calories > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.calories)}</strong> cal
+              </span>` : ''}
+              ${item.protein > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.protein)}</strong>g protein
+              </span>` : ''}
+              ${item.carbs > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.carbs)}</strong>g carbs
+              </span>` : ''}
+              ${item.fat > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.fat)}</strong>g fat
+              </span>` : ''}
+              ${item.fiber > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.fiber)}</strong>g fiber
+              </span>` : ''}
+              ${item.sugar > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.sugar)}</strong>g sugar
+              </span>` : ''}
+              ${item.saturatedFat > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.saturatedFat)}</strong>g sat fat
+              </span>` : ''}
+              ${item.sodium > 0 ? `<span class="nutrition-mini-item">
+                <strong>${Math.round(item.sodium)}</strong>mg sodium
+              </span>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Update nutrition totals
+  updateTotals() {
+    const totals = this.foodItems.reduce((acc, item) => {
+      // Ensure all values exist and are numbers
+      acc.calories += Number(item.calories) || 0;
+      acc.protein += Number(item.protein) || 0;
+      acc.carbs += Number(item.carbs) || 0;
+      acc.fat += Number(item.fat) || 0;
+      acc.fiber += Number(item.fiber) || 0;
+      acc.sugar += Number(item.sugar) || 0;
+      acc.saturatedFat += Number(item.saturatedFat) || 0;
+      acc.sodium += Number(item.sodium) || 0;
+      return acc;
+    }, {
+      calories: 0, protein: 0, carbs: 0, fat: 0,
+      fiber: 0, sugar: 0, saturatedFat: 0, sodium: 0
     });
+
+    document.getElementById('totalCalories').textContent = Math.round(totals.calories);
+    document.getElementById('totalProtein').textContent = Math.round(totals.protein);
+    document.getElementById('totalCarbs').textContent = Math.round(totals.carbs);
+    document.getElementById('totalFat').textContent = Math.round(totals.fat);
+    document.getElementById('totalFiber').textContent = Math.round(totals.fiber);
+    document.getElementById('totalSugar').textContent = Math.round(totals.sugar);
+    document.getElementById('totalSaturatedFat').textContent = Math.round(totals.saturatedFat);
+    document.getElementById('totalSodium').textContent = Math.round(totals.sodium);
+  }
+
+  // Update item count
+  updateItemCount() {
+    document.getElementById('itemCount').textContent = this.foodItems.length;
+  }
+
+  // Edit item
+  editItem(id) {
+    const item = this.foodItems.find(item => item.id === id);
+    if (!item) {
+      this.showError('Item not found');
+      return;
+    }
+
+    // Clear any previous validation state
+    const form = document.getElementById('editItemForm');
+    form.classList.remove('was-validated');
+
+    // Populate the edit form
+    document.getElementById('editItemId').value = item.id;
+    document.getElementById('editItemName').value = item.item || '';
+    document.getElementById('editItemCalories').value = item.calories || 0;
+    document.getElementById('editItemProtein').value = item.protein || 0;
+    document.getElementById('editItemCarbs').value = item.carbs || 0;
+    document.getElementById('editItemFat').value = item.fat || 0;
+    document.getElementById('editItemFiber').value = item.fiber || '';
+    document.getElementById('editItemSugar').value = item.sugar || '';
+    document.getElementById('editItemSaturatedFat').value = item.saturatedFat || '';
+    document.getElementById('editItemSodium').value = item.sodium || '';
+
+    // Show the modal
+    try {
+      const modalElement = document.getElementById('editItemModal');
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    } catch (error) {
+      console.error('Error showing modal:', error);
+      this.showError('Error opening edit form');
+    }
+  }
+
+  // Submit edit form from modal
+  submitEditForm() {
+    const form = document.getElementById('editItemForm');
+    const id = parseFloat(document.getElementById('editItemId').value);
     
-    modalHtml += '</div>';
-    helpContent.innerHTML = modalHtml;
-  }
-});
-
-function calculateDeficit() {
-  const gender = document.getElementById('gender').value;
-  const weightLbs = parseFloat(document.getElementById('weight').value);
-  const feet = parseInt(document.getElementById('feet').value);
-  const inches = parseInt(document.getElementById('inches').value);
-  const age = parseInt(document.getElementById('age').value);
-  const activityFactor = parseFloat(document.getElementById('activity').value);
-
-  if (isNaN(weightLbs) || isNaN(feet) || isNaN(inches) || isNaN(age)) {
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = '<div class="error-message">Please fill in all fields correctly.</div>';
-    resultDiv.classList.remove('d-none');
-    return;
-  }
-
-  // Convert pounds to kg and feet/inches to cm
-  const weight = weightLbs * 0.453592; // Convert lbs to kg
-  const height = (feet * 30.48) + (inches * 2.54); // Convert feet and inches to cm
-
-  let bmr;
-  if (gender === "male") {
-    bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-  } else {
-    bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-  }
-
-  const tdee = bmr * activityFactor;
-  const mildDeficit = tdee - 250;
-  const moderateDeficit = tdee - 500;
-  const aggressiveDeficit = tdee - 750;
-
-  const weeklyLossMild = (250 * 7) / 7700;
-  const weeklyLossModerate = (500 * 7) / 7700;
-  const weeklyLossAggressive = (750 * 7) / 7700;
-
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerHTML = `
-    <div class="results-wrapper">
-      <h3 class="results-title">
-        <i class="bi bi-graph-up-arrow"></i>
-        Your Results
-      </h3>
-      
-      <div class="row g-4 mb-4">
-        <!-- Base Rate Card -->
-        <div class="col-md-6">
-          <div class="metric-card">
-            <div class="metric-icon">
-              <i class="bi bi-fire"></i>
-            </div>
-            <div class="metric-content">
-              <h4>Base Metabolic Rate</h4>
-              <div class="metric-value">${Math.round(bmr)}</div>
-              <div class="metric-unit">calories/day</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Daily Energy Card -->
-        <div class="col-md-6">
-          <div class="metric-card">
-            <div class="metric-icon">
-              <i class="bi bi-lightning-charge"></i>
-            </div>
-            <div class="metric-content">
-              <h4>Daily Energy Expenditure</h4>
-              <div class="metric-value">${Math.round(tdee)}</div>
-              <div class="metric-unit">calories/day</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h4 class="section-title">
-        <i class="bi bi-calendar-check"></i>
-        Weight Loss Plans
-      </h4>
-      
-      <div class="row g-4">
-        <!-- Mild Plan -->
-        <div class="col-md-4">
-          <div class="plan-card">
-            <div class="plan-header mild">
-              <i class="bi bi-feather"></i>
-              <h5>Mild</h5>
-            </div>
-            <div class="plan-content">
-              <div class="plan-calories">${Math.round(mildDeficit)}</div>
-              <div class="plan-unit">calories/day</div>
-              <div class="plan-loss">
-                <i class="bi bi-arrow-down-circle"></i>
-                ${(weeklyLossMild * 2.20462).toFixed(1)} lbs/week
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Moderate Plan -->
-        <div class="col-md-4">
-          <div class="plan-card">
-            <div class="plan-header moderate">
-              <i class="bi bi-stars"></i>
-              <h5>Moderate</h5>
-            </div>
-            <div class="plan-content">
-              <div class="plan-calories">${Math.round(moderateDeficit)}</div>
-              <div class="plan-unit">calories/day</div>
-              <div class="plan-loss">
-                <i class="bi bi-arrow-down-circle"></i>
-                ${(weeklyLossModerate * 2.20462).toFixed(1)} lbs/week
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Aggressive Plan -->
-        <div class="col-md-4">
-          <div class="plan-card">
-            <div class="plan-header aggressive">
-              <i class="bi bi-rocket-takeoff"></i>
-              <h5>Aggressive</h5>
-            </div>
-            <div class="plan-content">
-              <div class="plan-calories">${Math.round(aggressiveDeficit)}</div>
-              <div class="plan-unit">calories/day</div>
-              <div class="plan-loss">
-                <i class="bi bi-arrow-down-circle"></i>
-                ${(weeklyLossAggressive * 2.20462).toFixed(1)} lbs/week
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  resultDiv.classList.remove('d-none');
-  resultDiv.classList.add('fade-in');
-}
-
-function showCalculator(type, event) {
-  // Hide all calculator sections
-  document.querySelectorAll('.calculator-section').forEach(section => {
-    section.classList.remove('active');
-  });
-  
-  // Remove active class from all tabs
-  document.querySelectorAll('.tab').forEach(tab => {
-    tab.classList.remove('active');
-  });
-  
-  // Show selected calculator and activate tab
-  document.getElementById(type + 'Calculator').classList.add('active');
-  event.target.classList.add('active');
-}
-
-async function analyzeFoodIntake() {
-  const foodInput = document.getElementById('foodInput').value.trim();
-  
-  if (!foodInput) {
-    showError('Please enter what you ate today.');
-    return;
+    // Find the item
+    const item = this.foodItems.find(item => item.id === id);
+    if (!item) {
+      this.showError('Item not found');
+      return;
+    }
+    
+    // Get form values
+    const formData = {
+      item: document.getElementById('editItemName').value.trim(),
+      quantity: '1 serving',
+      calories: parseFloat(document.getElementById('editItemCalories').value) || 0,
+      protein: parseFloat(document.getElementById('editItemProtein').value) || 0,
+      carbs: parseFloat(document.getElementById('editItemCarbs').value) || 0,
+      fat: parseFloat(document.getElementById('editItemFat').value) || 0,
+      fiber: parseFloat(document.getElementById('editItemFiber').value) || 0,
+      sugar: parseFloat(document.getElementById('editItemSugar').value) || 0,
+      saturatedFat: parseFloat(document.getElementById('editItemSaturatedFat').value) || 0,
+      sodium: parseFloat(document.getElementById('editItemSodium').value) || 0
+    };
+    
+    // Validate required fields
+    if (!formData.item || formData.calories < 0) {
+      form.classList.add('was-validated');
+      this.showError('Please fill in all required fields correctly');
+      return;
+    }
+    
+    // Update item
+    Object.assign(item, formData);
+    
+    // Save and update display
+    this.saveToStorage();
+    this.updateDisplay();
+    this.showSuccessMessage('Item updated successfully!');
+    
+    // Close modal
+    try {
+      const modalElement = document.getElementById('editItemModal');
+      const modal = bootstrap.Modal.getInstance(modalElement);
+      if (modal) {
+        modal.hide();
+      } else {
+        // Create new instance if none exists
+        const newModal = new bootstrap.Modal(modalElement);
+        newModal.hide();
+      }
+    } catch (error) {
+      console.error('Error closing modal:', error);
+    }
+    
+    // Clear form validation
+    form.classList.remove('was-validated');
   }
 
-  // Show loading state
-  const loadingDiv = document.getElementById('loading');
-  const foodResult = document.getElementById('foodResult');
-  loadingDiv.classList.remove('d-none');
-  foodResult.classList.add('d-none');
+  // Delete item
+  deleteItem(id) {
+    if (confirm('Are you sure you want to delete this item?')) {
+      this.foodItems = this.foodItems.filter(item => item.id !== id);
+      this.saveToStorage();
+      this.updateDisplay();
+      this.showSuccessMessage('Item deleted successfully!');
+    }
+  }
 
-  try {
-    const response = await fetch('https://analyzenutrition-ik32xiclqq-uc.a.run.app', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: foodInput }),
+  // Clear all items
+  clearAllItems() {
+    if (confirm('Are you sure you want to clear all items? This cannot be undone.')) {
+      this.foodItems = [];
+      this.saveToStorage();
+      this.updateDisplay();
+      this.showSuccessMessage('All items cleared!');
+    }
+  }
+
+  // Export data
+  exportData() {
+    const data = {
+      exportDate: new Date().toISOString(),
+      totalItems: this.foodItems.length,
+      items: this.foodItems,
+      totals: this.calculateCurrentTotals()
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nutrition-data-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    this.showSuccessMessage('Data exported successfully!');
+  }
+
+  // Calculate current totals
+  calculateCurrentTotals() {
+    return this.foodItems.reduce((acc, item) => {
+      acc.calories += Number(item.calories) || 0;
+      acc.protein += Number(item.protein) || 0;
+      acc.carbs += Number(item.carbs) || 0;
+      acc.fat += Number(item.fat) || 0;
+      acc.fiber += Number(item.fiber) || 0;
+      acc.sugar += Number(item.sugar) || 0;
+      acc.saturatedFat += Number(item.saturatedFat) || 0;
+      acc.sodium += Number(item.sodium) || 0;
+      return acc;
+    }, { 
+      calories: 0, protein: 0, carbs: 0, fat: 0,
+      fiber: 0, sugar: 0, saturatedFat: 0, sodium: 0 
     });
+  }
 
-    if (!response.ok) {
-      throw new Error('Failed to analyze food intake');
+  // Utility methods
+  showLoading(show) {
+    const loadingDiv = document.getElementById('loading');
+    if (show) {
+      loadingDiv.classList.remove('d-none');
+    } else {
+      loadingDiv.classList.add('d-none');
+    }
+  }
+
+  showError(message) {
+    this.showMessage(message, 'danger');
+  }
+
+  showSuccessMessage(message) {
+    this.showMessage(message, 'success');
+  }
+
+  showMessage(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 1050; max-width: 300px;';
+    alertDiv.innerHTML = `
+      ${message}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+      if (alertDiv.parentNode) {
+        alertDiv.remove();
+      }
+    }, 5000);
+  }
+
+  // Calorie deficit calculation (kept from original)
+  calculateDeficit() {
+    const gender = document.getElementById('gender').value;
+    const weightLbs = parseFloat(document.getElementById('weight').value);
+    const feet = parseInt(document.getElementById('feet').value);
+    const inches = parseInt(document.getElementById('inches').value);
+    const age = parseInt(document.getElementById('age').value);
+    const activityFactor = parseFloat(document.getElementById('activity').value);
+
+    if (isNaN(weightLbs) || isNaN(feet) || isNaN(inches) || isNaN(age)) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerHTML = '<div class="alert alert-danger">Please fill in all fields correctly.</div>';
+      resultDiv.classList.remove('d-none');
+      return;
     }
 
-    const data = await response.json();
-    displayFoodResults(data);
-  } catch (error) {
-    showError('Failed to analyze food intake. Please try again.');
-  } finally {
-    loadingDiv.classList.add('d-none');
+    const weight = weightLbs * 0.453592;
+    const height = (feet * 30.48) + (inches * 2.54);
+
+    let bmr;
+    if (gender === "male") {
+      bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+    } else {
+      bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+    }
+
+    const tdee = bmr * activityFactor;
+    const mildDeficit = tdee - 250;
+    const moderateDeficit = tdee - 500;
+    const aggressiveDeficit = tdee - 750;
+
+    const weeklyLossMild = (250 * 7) / 7700;
+    const weeklyLossModerate = (500 * 7) / 7700;
+    const weeklyLossAggressive = (750 * 7) / 7700;
+
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `
+      <div class="results-wrapper">
+        <h3 class="results-title">
+          <i class="bi bi-graph-up-arrow"></i>
+          Your Results
+        </h3>
+        
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="bi bi-fire"></i>
+              </div>
+              <div class="metric-content">
+                <h4>Base Metabolic Rate</h4>
+                <div class="metric-value">${Math.round(bmr)}</div>
+                <div class="metric-unit">calories/day</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="metric-card">
+              <div class="metric-icon">
+                <i class="bi bi-lightning-charge"></i>
+              </div>
+              <div class="metric-content">
+                <h4>Daily Energy Expenditure</h4>
+                <div class="metric-value">${Math.round(tdee)}</div>
+                <div class="metric-unit">calories/day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="section-title">
+          <i class="bi bi-calendar-check"></i>
+          Weight Loss Plans
+        </h4>
+        
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="plan-card">
+              <div class="plan-header mild">
+                <i class="bi bi-feather"></i>
+                <h5>Mild</h5>
+              </div>
+              <div class="plan-content">
+                <div class="plan-calories">${Math.round(mildDeficit)}</div>
+                <div class="plan-unit">calories/day</div>
+                <div class="plan-loss">
+                  <i class="bi bi-arrow-down-circle"></i>
+                  ${(weeklyLossMild * 2.20462).toFixed(1)} lbs/week
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="plan-card">
+              <div class="plan-header moderate">
+                <i class="bi bi-stars"></i>
+                <h5>Moderate</h5>
+              </div>
+              <div class="plan-content">
+                <div class="plan-calories">${Math.round(moderateDeficit)}</div>
+                <div class="plan-unit">calories/day</div>
+                <div class="plan-loss">
+                  <i class="bi bi-arrow-down-circle"></i>
+                  ${(weeklyLossModerate * 2.20462).toFixed(1)} lbs/week
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="plan-card">
+              <div class="plan-header aggressive">
+                <i class="bi bi-rocket-takeoff"></i>
+                <h5>Aggressive</h5>
+              </div>
+              <div class="plan-content">
+                <div class="plan-calories">${Math.round(aggressiveDeficit)}</div>
+                <div class="plan-unit">calories/day</div>
+                <div class="plan-loss">
+                  <i class="bi bi-arrow-down-circle"></i>
+                  ${(weeklyLossAggressive * 2.20462).toFixed(1)} lbs/week
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    resultDiv.classList.remove('d-none');
+    resultDiv.classList.add('fade-in');
   }
 }
 
-function displayFoodResults(response) {
-  const foodResult = document.getElementById('foodResult');
-  const data = response.data;
-  
-  let html = `
-    <div class="results-container">
-      <h3 class="mb-4">Food Analysis Results</h3>
-      
-      <!-- Itemized List Section -->
-      <div class="section-card mb-4">
-        <h4>Itemized Foods</h4>
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Calories</th>
-                <th>Protein</th>
-                <th>Carbs</th>
-                <th>Fat</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.itemizedList.map(item => `
-                <tr>
-                  <td>${item.item}</td>
-                  <td>${Math.round(item.calories)} kcal</td>
-                  <td>${Math.round(item.protein)}g</td>
-                  <td>${Math.round(item.carbs)}g</td>
-                  <td>${Math.round(item.fat)}g</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Nutrition Summary Section -->
-      <div class="section-card mb-4">
-        <h4>Nutrition Summary</h4>
-        <div class="nutrition-grid">
-          <div class="nutrition-item">
-            <h5>Calories</h5>
-            <p>${Math.round(data.nutritionSummary.calories)} kcal</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Protein</h5>
-            <p>${Math.round(data.nutritionSummary.protein)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Carbs</h5>
-            <p>${Math.round(data.nutritionSummary.carbs)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Fat</h5>
-            <p>${Math.round(data.nutritionSummary.fat)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Fiber</h5>
-            <p>${Math.round(data.nutritionSummary.fiber)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Sugar</h5>
-            <p>${Math.round(data.nutritionSummary.sugar)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Saturated Fat</h5>
-            <p>${Math.round(data.nutritionSummary.saturatedFat)}g</p>
-          </div>
-          <div class="nutrition-item">
-            <h5>Sodium</h5>
-            <p>${Math.round(data.nutritionSummary.sodium)}mg</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Recommendations Section -->
-      <div class="section-card">
-        <h4>Recommendations</h4>
-        <ul class="recommendations-list">
-          ${data.recommendations.map(rec => `
-            <li class="recommendation-item">
-              <i class="bi bi-lightbulb"></i>
-              ${rec}
-            </li>
-          `).join('')}
-        </ul>
-      </div>
-    </div>
-  `;
-
-  foodResult.innerHTML = html;
-  foodResult.classList.remove('d-none');
-  foodResult.classList.add('fade-in');
+// Global functions for HTML onclick handlers
+function clearAllItems() {
+  foodTracker.clearAllItems();
 }
 
-function showError(message) {
-  const errorDiv = document.createElement('div');
-  errorDiv.className = 'error-message fade-in';
-  errorDiv.textContent = message;
-  
-  const form = document.getElementById('foodForm');
-  const existingError = form.querySelector('.error-message');
-  if (existingError) {
-    existingError.remove();
+function exportData() {
+  foodTracker.exportData();
+}
+
+function submitEditForm() {
+  if (foodTracker) {
+    foodTracker.submitEditForm();
+  } else {
+    console.error('foodTracker not initialized');
   }
-  
-  form.appendChild(errorDiv);
 }
 
-// Detailed Nutrition Guide Information
-const nutritionGuide = {
-  calories: {
-    title: 'Calories',
-    description: 'Calories are units of energy that your body needs for all its functions. Daily energy needs depend on factors such as age, gender, weight, metabolism, and physical activity level.',
-    recommendations: {
-      general: 'General daily calorie needs vary:',
-      ranges: [
-        'Adult women: ~1,600–2,400 calories per day',
-        'Adult men: ~2,000–3,000 calories per day',
-        'Athletes or very active individuals may require more'
-      ],
-      tips: 'For weight loss, a typical strategy is to create a daily deficit of 500–750 calories from your maintenance level, though individual needs may differ.'
-    }
-  },
-  protein: {
-    title: 'Protein',
-    description: 'Protein is crucial for building and repairing tissues, supporting immune function, and producing enzymes and hormones.',
-    recommendations: {
-      general: 'Protein needs vary based on body weight and activity level:',
-      ranges: [
-        'Sedentary adults: ~0.8 grams per kilogram of body weight',
-        'Active adults: ~1.2–1.7 grams per kilogram',
-        'Athletes: ~1.4–2.0 grams per kilogram (or more based on training demands)'
-      ],
-      tips: 'Distribute protein intake evenly throughout the day to support muscle repair and growth.'
-    }
-  },
-  carbs: {
-    title: 'Carbohydrates',
-    description: "Carbohydrates are the body's primary energy source, vital for brain function and fueling physical activity.",
-    recommendations: {
-      general: 'Carbohydrate needs depend on your activity level and overall calorie goals:',
-      ranges: [
-        'Minimum for basic brain function: ~130 grams per day',
-        'General intake: 45–65% of total daily calories should come from carbohydrates',
-        'Endurance athletes: ~6–10 grams per kilogram of body weight'
-      ],
-      tips: 'Prioritize complex carbohydrates from whole grains, fruits, and vegetables over refined sugars.'
-    }
-  },
-  fat: {
-    title: 'Fat',
-    description: 'Dietary fat is essential for hormone production, nutrient absorption, and cell health. Focus on healthy, unsaturated fats.',
-    recommendations: {
-      general: 'Aim for fats to comprise 20–35% of your total daily calories:',
-      ranges: [
-        'Minimum: ~0.5–1 gram per kilogram of body weight',
-        'For a 2,000-calorie diet: roughly 44–78 grams of fat per day',
-        'Adjustments may be necessary for athletes or those with higher energy needs'
-      ],
-      tips: 'Include sources like avocados, nuts, olive oil, and fatty fish to boost intake of healthy fats.'
-    }
-  },
-  fiber: {
-    title: 'Fiber',
-    description: 'Fiber aids digestion, helps maintain blood sugar levels, and supports heart health by promoting satiety and reducing cholesterol.',
-    recommendations: {
-      general: 'Daily fiber intake recommendations:',
-      ranges: [
-        'Adult women: ~25 grams per day',
-        'Adult men: ~38 grams per day',
-        'Individuals over 50: Women ~21 grams; Men ~30 grams per day'
-      ],
-      tips: 'Increase fiber gradually in your diet and drink plenty of water to help prevent digestive discomfort.'
-    }
-  },
-  sugar: {
-    title: 'Sugar',
-    description: 'Sugars can be naturally occurring (in fruits and dairy) or added during processing. Limiting added sugars is key to maintaining overall health.',
-    recommendations: {
-      general: 'Limit intake of added sugars:',
-      ranges: [
-        'Women: No more than ~25 grams of added sugar per day',
-        'Men: No more than ~36 grams of added sugar per day',
-        'Children: Aim for less than 25 grams per day'
-      ],
-      tips: 'Choose whole fruits and natural sources of sugar over processed foods with added sugars.'
-    }
-  },
-  saturatedFat: {
-    title: 'Saturated Fat',
-    description: 'Saturated fats are found primarily in animal products and certain tropical oils. High intake is associated with increased heart disease risk.',
-    recommendations: {
-      general: 'Keep saturated fat intake low:',
-      ranges: [
-        'Less than 10% of total daily calories',
-        'For a 2,000-calorie diet: approximately 22 grams or less per day',
-        'Individuals at risk for heart disease should aim for even lower levels'
-      ],
-      tips: 'Opt for lean protein sources and reduce processed foods to minimize saturated fat intake.'
-    }
-  },
-  sodium: {
-    title: 'Sodium',
-    description: 'Sodium is essential for fluid balance and nerve function, but too much can contribute to high blood pressure and other health issues.',
-    recommendations: {
-      general: 'Daily sodium guidelines are:',
-      ranges: [
-        'Healthy adults: Less than 2,300 mg per day',
-        'At-risk individuals (e.g., high blood pressure): Less than 1,500 mg per day',
-        'Athletes may require more to compensate for sodium loss through sweat'
-      ],
-      tips: 'Cook meals at home and choose low-sodium options to better manage your intake.'
-    }
-  },
-};
+// Initialize when DOM is loaded
+let foodTracker;
+document.addEventListener('DOMContentLoaded', () => {
+  foodTracker = new FoodTracker();
+});
