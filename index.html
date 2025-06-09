@@ -3,509 +3,559 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Calculate your caloric needs and analyze your food intake with our nutrition calculator">
+  <meta name="description" content="Advanced nutrition tracker with food analysis, chat, and data management">
   <meta name="theme-color" content="#2ecc71">
-  <title>Nutrition | Calorie & Food Analysis</title>
+  <title>Nutrition Tracker | Smart Food Analysis & AI Chat</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-light">
-  <div class="container">
-    <div class="card">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h2 class="card-title mb-0">Nutrition</h2>
-          <button type="button" class="btn btn-outline-dark btn-sm" data-bs-toggle="modal" data-bs-target="#helpModal">
-            <i class="bi bi-question-circle"></i> Help
-          </button>
-        </div>
+  <!-- Bootstrap Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container-fluid">
+      <!-- Brand -->
+      <a class="navbar-brand fw-bold" href="#">
+        <i class="bi bi-nutrition text-success me-2"></i>
+        Nutrition
+      </a>
 
-        <!-- Help Modal -->
-        <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="helpModalLabel">Nutrition Guide</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="nutrition-help-content">
-                  <div class="toc">
-                    <h6><i class="bi bi-list"></i> Table of Contents</h6>
-                    <ul>
-                      <li><a href="#overview">App Overview</a></li>
-                      <li><a href="#daily-targets">Daily Nutrition Targets</a></li>
-                      <li><a href="#usage-tips">Usage Tips</a></li>
-                      <li><a href="#understanding-values">Understanding Values</a></li>
-                    </ul>
-                  </div>
+      <!-- Hamburger Toggle -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-                  <div id="overview" class="help-intro mb-4">
-                    <h4 class="help-intro-title">
-                      <i class="bi bi-info-circle"></i>
-                      App Overview
-                    </h4>
-                    <p class="help-intro-text">
-                      This nutrition tracker helps you monitor your daily food intake with both smart analysis and manual entry.
-                      Track individual items, see running totals, and compare against recommended daily values.
-                    </p>
-                    <div class="help-quick-tips">
-                      <h5><i class="bi bi-star"></i> Key Features:</h5>
-                      <ul>
-                        <li>Smart food analysis that identifies and adds multiple items automatically</li>
-                        <li>Manual item entry with complete nutritional data</li>
-                        <li>Edit and delete individual food items</li>
-                        <li>Real-time calculation of daily nutrition totals</li>
-                        <li>Export your data for external analysis</li>
-                        <li>Persistent storage - your data is saved locally</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div id="daily-targets" class="mb-4">
-                    <h4 class="mb-3">
-                      <i class="bi bi-bullseye"></i> Daily Nutrition Targets
-                    </h4>
-                    
-                    <div class="nutrition-targets">
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-fire"></i> Calories</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>Adult Women:</strong> 1,600-2,400 calories/day
-                            <small class="d-block">Varies by age, activity level, and weight goals</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Adult Men:</strong> 2,000-3,000 calories/day
-                            <small class="d-block">Higher for very active individuals or athletes</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-egg"></i> Protein</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>Sedentary Adults:</strong> 0.8g per kg body weight
-                            <small class="d-block">~46g for women, ~56g for men (average weight)</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Active Adults:</strong> 1.2-1.7g per kg body weight
-                            <small class="d-block">~60-85g for women, ~75-105g for men</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Athletes:</strong> 1.4-2.0g per kg body weight
-                            <small class="d-block">Can be higher for strength training</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-heart-pulse"></i> Carbohydrates</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>General Intake:</strong> 45-65% of total calories
-                            <small class="d-block">~225-325g for 2,000 calorie diet</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Minimum for Brain:</strong> 130g/day
-                            <small class="d-block">Essential glucose for brain function</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-droplet"></i> Fat</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>Total Fat:</strong> 20-35% of total calories
-                            <small class="d-block">~44-78g for 2,000 calorie diet</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Saturated Fat:</strong> <10% of total calories
-                            <small class="d-block">Less than 22g for 2,000 calorie diet</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-flower1"></i> Fiber</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>Women (19-50):</strong> 25g/day
-                            <small class="d-block">21g/day for women over 50</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Men (19-50):</strong> 38g/day
-                            <small class="d-block">30g/day for men over 50</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-heart"></i> Sugar</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>Added Sugar Limit (Women):</strong> ≤25g/day (6 tsp)
-                            <small class="d-block">American Heart Association recommendation</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Added Sugar Limit (Men):</strong> ≤36g/day (9 tsp)
-                            <small class="d-block">Natural sugars from fruits don't count toward this limit</small>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="target-section">
-                        <h6 class="fw-bold text-primary mb-3"><i class="bi bi-snow"></i> Sodium</h6>
-                        <div class="target-ranges">
-                          <div class="target-item">
-                            <strong>General Limit:</strong> <2,300mg/day
-                            <small class="d-block">About 1 teaspoon of salt</small>
-                          </div>
-                          <div class="target-item">
-                            <strong>Ideal Limit:</strong> <1,500mg/day
-                            <small class="d-block">For adults with high blood pressure</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div id="usage-tips" class="mb-4">
-                    <h4 class="mb-3">
-                      <i class="bi bi-lightbulb"></i> Usage Tips
-                    </h4>
-                    <div class="help-quick-tips">
-                      <ul>
-                        <li><strong>Smart Analysis:</strong> Describe your meals naturally (e.g., "I had scrambled eggs with toast")</li>
-                        <li><strong>Be Specific:</strong> Include portion sizes when possible for better accuracy</li>
-                        <li><strong>Edit Items:</strong> Click the edit button to adjust nutrition values if needed</li>
-                        <li><strong>Track Progress:</strong> Compare your daily totals with the recommended targets above</li>
-                        <li><strong>Export Data:</strong> Use the export button to save your nutrition data</li>
-                        <li><strong>Data Persistence:</strong> Your entries are automatically saved in your browser</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div id="understanding-values" class="mb-4">
-                    <h4 class="mb-3">
-                      <i class="bi bi-graph-up"></i> Understanding Values
-                    </h4>
-                    <div class="alert alert-secondary">
-                      <h6 class="fw-bold mb-2">Important Notes:</h6>
-                      <ul class="mb-0">
-                        <li>Values are estimates based on standard nutritional databases</li>
-                        <li>Actual nutrition may vary based on preparation methods and brands</li>
-                        <li>These are general guidelines - consult a nutritionist for personalized advice</li>
-                        <li>Focus on getting nutrients from whole, unprocessed foods when possible</li>
-                        <li>Individual needs may vary based on age, activity level, and health conditions</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <ul class="nav nav-tabs mb-4" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#deficitCalculator" type="button" role="tab">
-              Calorie Deficit
+      <!-- Collapsible Navigation -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <button class="nav-link active" id="homeTab-btn" data-target="#homeTab" type="button">
+              <i class="bi bi-house me-1"></i>Home
             </button>
           </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#foodCalculator" type="button" role="tab">
-              Food Analysis
+          <li class="nav-item">
+            <button class="nav-link" id="chatTab-btn" data-target="#chatTab" type="button">
+              <i class="bi bi-chat-dots me-1"></i>Chat
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="historyTab-btn" data-target="#historyTab" type="button">
+              <i class="bi bi-clock-history me-1"></i>History
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="calculatorTab-btn" data-target="#calculatorTab" type="button">
+              <i class="bi bi-calculator me-1"></i>Calculator
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="helpTab-btn" data-target="#helpTab" type="button">
+              <i class="bi bi-question-circle me-1"></i>Help
             </button>
           </li>
         </ul>
+      </div>
+    </div>
+  </nav>
 
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="deficitCalculator" role="tabpanel">
-            <form id="deficitForm" class="needs-validation" novalidate>
-              <div class="mb-3">
-                <label for="gender" class="form-label">Gender:</label>
-                <select id="gender" class="form-select" required>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
+  <!-- Main Content Container -->
+  <div class="container-fluid px-2 px-md-4 py-4">
+    <div class="tab-content">
+      <!-- HOME TAB (Main Food Analysis) -->
+      <div class="tab-pane fade show active" id="homeTab" role="tabpanel" aria-labelledby="homeTab-tab">
+        <!-- Hero Section -->
+        <div class="hero-section mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h3 class="hero-title"><i class="bi bi-magic"></i> Smart Food Analysis</h3>
+              <p class="hero-subtitle">Describe your meals and get instant, detailed nutrition analysis</p>
+            </div>
+          </div>
+          
+          <form id="foodForm" class="needs-validation mb-4" novalidate>
+            <div class="m-3">
+              <textarea 
+                id="foodInput" 
+                class="form-control" 
+                rows="4"
+                placeholder="Example: For breakfast I had 2 scrambled eggs with buttered toast and orange juice. For lunch I had a grilled chicken salad with olive oil dressing..."
+              ></textarea>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-search"></i> <span class="d-none d-sm-inline">Analyze Food</span><span class="d-sm-none">Analyze</span>
+              </button>
+              <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manualAddModal">
+                <i class="bi bi-plus"></i> <span class="d-none d-sm-inline">Add Manually</span><span class="d-sm-none">Add</span>
+              </button>
+              <button type="button" class="btn btn-outline-info" onclick="saveCurrentDay()">
+                <i class="bi bi-save"></i> <span class="d-none d-sm-inline">Save Today</span><span class="d-sm-none">Save</span>
+              </button>
+            </div>
+          </form>
+        </div>
 
-              <div class="mb-3">
-                <label for="weight" class="form-label">Weight (lbs):</label>
-                <input type="number" id="weight" class="form-control" min="1" step="any" placeholder="Enter weight in pounds" required>
-              </div>
+        <!-- Loading State -->
+        <div id="loading" class="d-none text-center my-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Analyzing your food intake...</p>
+        </div>
 
-              <div class="mb-3">
-                <label class="form-label">Height:</label>
-                <div class="row g-2">
-                  <div class="col-6">
-                    <input type="number" id="feet" class="form-control" min="0" placeholder="Feet" required>
-                  </div>
-                  <div class="col-6">
-                    <input type="number" id="inches" class="form-control" min="0" max="11" placeholder="Inches" required>
+        <!-- Daily Summary -->
+        <div id="dailySummary" class="section-card mb-4">
+          <h4><i class="bi bi-graph-up"></i> Today's Nutrition Summary</h4>
+          <div class="nutrition-grid" id="nutritionTotals">
+            <div class="nutrition-item">
+              <h5>Calories</h5>
+              <p id="totalCalories">0</p>
+              <small>kcal</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Protein</h5>
+              <p id="totalProtein">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Carbs</h5>
+              <p id="totalCarbs">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Fat</h5>
+              <p id="totalFat">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Fiber</h5>
+              <p id="totalFiber">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sugar</h5>
+              <p id="totalSugar">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sat. Fat</h5>
+              <p id="totalSaturatedFat">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sodium</h5>
+              <p id="totalSodium">0</p>
+              <small>mg</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Food Items List -->
+        <div class="section-card">
+          <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
+            <h4 class="mb-0"><i class="bi bi-list-ul"></i> Today's Food Items</h4>
+            <div class="btn-group btn-group-sm" role="group">
+              <button type="button" class="btn btn-outline-secondary" onclick="clearAllItems()">
+                <i class="bi bi-trash"></i> <span class="d-none d-lg-inline">Clear All</span>
+              </button>
+              <button type="button" class="btn btn-outline-primary" onclick="exportToCSV()">
+                <i class="bi bi-download"></i> <span class="d-none d-lg-inline">Export CSV</span>
+              </button>
+            </div>
+          </div>
+          
+          <div id="foodItemsList">
+            <div class="empty-state text-center py-5">
+              <i class="bi bi-bowl display-4 text-muted mb-3"></i>
+              <p class="text-muted">No food items added yet. Use the smart analysis above to get started!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT TAB -->
+      <div class="tab-pane fade" id="chatTab" role="tabpanel" aria-labelledby="chatTab-tab">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-chat-dots"></i> Coach</h3>
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#instructionsModal">
+              <i class="bi bi-gear"></i> <span class="d-none d-sm-inline">Instructions</span><span class="d-sm-none">Setup</span>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" onclick="clearChat()">
+              <i class="bi bi-trash"></i> <span class="d-none d-sm-inline">Clear Chat</span><span class="d-sm-none">Clear</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-container">
+          <div class="chat-messages-wrapper">
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-message bot-message">
+                <div class="message-content">
+                  <i class="bi bi-robot"></i>
+                  <div class="message-text">
+                    Hey! I'm your nutrition coach. I can analyze your eating patterns, give you personalized advice, and answer questions about your nutrition data. What's on your mind?
                   </div>
                 </div>
               </div>
-
-              <div class="mb-3">
-                <label for="age" class="form-label">Age (years):</label>
-                <input type="number" id="age" class="form-control" min="1" placeholder="Enter your age" required>
-              </div>
-
-              <div class="mb-4">
-                <label for="activity" class="form-label">Activity Level:</label>
-                <select id="activity" class="form-select" required>
-                  <option value="1.2">Sedentary (little or no exercise)</option>
-                  <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
-                  <option value="1.55">Moderately active (moderate exercise 3–5 days/week)</option>
-                  <option value="1.725">Very active (hard exercise 6–7 days/week)</option>
-                  <option value="1.9">Super active (physical job + training)</option>
-                </select>
-              </div>
-
-              <button type="submit" class="btn btn-dark w-100 py-2">Calculate Calories</button>
+            </div>
+          </div>
+          
+          <div class="chat-input-container">
+            <form id="chatForm" class="d-flex gap-2">
+              <input 
+                type="text" 
+                id="chatInput" 
+                class="form-control" 
+                placeholder="Ask me about your nutrition..."
+                autocomplete="off"
+              >
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-send"></i>
+              </button>
             </form>
+          </div>
+        </div>
+      </div>
 
-            <div id="result" class="mt-4 d-none"></div>
+      <!-- HISTORY TAB -->
+      <div class="tab-pane fade" id="historyTab" role="tabpanel" aria-labelledby="historyTab-tab">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-clock-history"></i> Nutrition History</h3>
+          <button type="button" class="btn btn-outline-primary btn-sm" onclick="exportAllDataToCSV()">
+            <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Export All CSV</span><span class="d-sm-none">Export</span>
+          </button>
+        </div>
+
+        <div id="savedDataList">
+          <div class="empty-state text-center py-5">
+            <i class="bi bi-archive display-4 text-muted mb-3"></i>
+            <p class="text-muted">No saved data yet. Use "Save Today" on the Home tab to save your daily nutrition!</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CALCULATOR TAB -->
+      <div class="tab-pane fade" id="calculatorTab" role="tabpanel" aria-labelledby="calculatorTab-tab">
+        <h3 class="mb-4"><i class="bi bi-calculator"></i> Calorie Deficit Calculator</h3>
+        
+        <form id="deficitForm" class="needs-validation" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="gender" class="form-label">Gender:</label>
+              <select id="gender" class="form-select" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="weight" class="form-label">Weight (lbs):</label>
+              <input type="number" id="weight" class="form-control" min="1" step="any" placeholder="Enter weight" required>
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label">Height:</label>
+              <input type="number" id="feet" class="form-control" min="0" placeholder="Feet" required>
+            </div>
+            <div class="col-md-3">
+              <input type="number" id="inches" class="form-control" min="0" max="11" placeholder="Inches" required style="margin-top: 32px;">
+            </div>
+
+            <div class="col-md-6">
+              <label for="age" class="form-label">Age (years):</label>
+              <input type="number" id="age" class="form-control" min="1" placeholder="Enter your age" required>
+            </div>
+
+            <div class="col-12">
+              <label for="activity" class="form-label">Activity Level:</label>
+              <select id="activity" class="form-select" required>
+                <option value="1.2">Sedentary (little or no exercise)</option>
+                <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
+                <option value="1.55">Moderately active (moderate exercise 3–5 days/week)</option>
+                <option value="1.725">Very active (hard exercise 6–7 days/week)</option>
+                <option value="1.9">Super active (physical job + training)</option>
+              </select>
+            </div>
           </div>
 
-          <div class="tab-pane fade" id="foodCalculator" role="tabpanel">
-            <!-- Add Item Section -->
-            <div class="section-card mb-4">
-              <h4><i class="bi bi-plus-circle"></i> Add Food Items</h4>
-              
-              <!-- AI Analysis Form -->
-              <form id="foodForm" class="needs-validation mb-4" novalidate>
-                <div class="mb-3">
-                  <label for="foodInput" class="form-label">Describe your meals (Smart analysis will identify and add items):</label>
-                  <textarea 
-                    id="foodInput" 
-                    class="form-control" 
-                    rows="3"
-                    placeholder="Example: For breakfast I had 2 eggs with toast and butter. For lunch I had a chicken sandwich..."
-                  ></textarea>
-                </div>
-                <div class="d-flex gap-2">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Smart Analysis
-                  </button>
-                  <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manualAddModal">
-                    <i class="bi bi-plus"></i> Add Manually
-                  </button>
-                </div>
-              </form>
-            </div>
+          <button type="submit" class="btn btn-primary w-100 py-2 mt-4">Calculate Calories</button>
+        </form>
 
-            <!-- Manual Add Modal -->
-            <div class="modal fade" id="manualAddModal" tabindex="-1" aria-labelledby="manualAddModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="manualAddModalLabel">
-                      <i class="bi bi-plus-circle"></i> Add Food Item Manually
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="manualAddForm" class="needs-validation" novalidate>
-                      <div class="row g-3">
-                        <div class="col-md-12">
-                          <label for="itemName" class="form-label">Food Item</label>
-                          <input type="text" id="itemName" class="form-control" placeholder="e.g., Banana" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemCalories" class="form-label">Calories</label>
-                          <input type="number" id="itemCalories" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemProtein" class="form-label">Protein (g)</label>
-                          <input type="number" id="itemProtein" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemCarbs" class="form-label">Carbs (g)</label>
-                          <input type="number" id="itemCarbs" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemFat" class="form-label">Fat (g)</label>
-                          <input type="number" id="itemFat" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemFiber" class="form-label">Fiber (g)</label>
-                          <input type="number" id="itemFiber" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemSugar" class="form-label">Sugar (g)</label>
-                          <input type="number" id="itemSugar" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemSaturatedFat" class="form-label">Saturated Fat (g)</label>
-                          <input type="number" id="itemSaturatedFat" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="itemSodium" class="form-label">Sodium (mg)</label>
-                          <input type="number" id="itemSodium" class="form-control" min="0" step="1">
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="foodTracker.submitManualForm()">
-                      <i class="bi bi-plus"></i> Add Item
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div id="result" class="mt-4 d-none"></div>
+      </div>
 
-            <!-- Edit Item Modal -->
-            <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="editItemModalLabel">
-                      <i class="bi bi-pencil"></i> Edit Food Item
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form id="editItemForm" class="needs-validation" novalidate>
-                      <input type="hidden" id="editItemId">
-                      <div class="row g-3">
-                        <div class="col-md-12">
-                          <label for="editItemName" class="form-label">Food Item</label>
-                          <input type="text" id="editItemName" class="form-control" placeholder="e.g., Banana" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemCalories" class="form-label">Calories</label>
-                          <input type="number" id="editItemCalories" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemProtein" class="form-label">Protein (g)</label>
-                          <input type="number" id="editItemProtein" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemCarbs" class="form-label">Carbs (g)</label>
-                          <input type="number" id="editItemCarbs" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemFat" class="form-label">Fat (g)</label>
-                          <input type="number" id="editItemFat" class="form-control" min="0" step="0.1" required>
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemFiber" class="form-label">Fiber (g)</label>
-                          <input type="number" id="editItemFiber" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemSugar" class="form-label">Sugar (g)</label>
-                          <input type="number" id="editItemSugar" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemSaturatedFat" class="form-label">Saturated Fat (g)</label>
-                          <input type="number" id="editItemSaturatedFat" class="form-control" min="0" step="0.1">
-                        </div>
-                        <div class="col-md-3">
-                          <label for="editItemSodium" class="form-label">Sodium (mg)</label>
-                          <input type="number" id="editItemSodium" class="form-control" min="0" step="1">
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="submitEditForm()">
-                      <i class="bi bi-check"></i> Update Item
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <!-- HELP TAB -->
+      <div class="tab-pane fade" id="helpTab" role="tabpanel" aria-labelledby="helpTab-tab">
+        <h3 class="mb-4"><i class="bi bi-question-circle"></i> Nutrition Tracker Guide</h3>
+        
+        <div class="nutrition-help-content">
+          <div class="toc section-card mb-4">
+            <h4><i class="bi bi-list"></i> Quick Start</h4>
+            <ul>
+              <li><a href="#smart-analysis">Smart Food Analysis</a></li>
+              <li><a href="#chat-feature">Chat with Your Data</a></li>
+              <li><a href="#data-saving">Save & Export Data</a></li>
+              <li><a href="#calorie-calculator">Calorie Calculator</a></li>
+            </ul>
+          </div>
 
-            <!-- Loading State -->
-            <div id="loading" class="d-none text-center my-4">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-              </div>
-              <p class="mt-2 text-muted">Analyzing your food intake...</p>
-            </div>
-
-            <!-- Daily Summary -->
-            <div id="dailySummary" class="section-card mb-4">
-              <h4><i class="bi bi-graph-up"></i> Today's Nutrition Summary</h4>
-              <div class="nutrition-grid" id="nutritionTotals">
-                <div class="nutrition-item">
-                  <h5>Calories</h5>
-                  <p id="totalCalories">0</p>
-                  <small>kcal</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Protein</h5>
-                  <p id="totalProtein">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Carbs</h5>
-                  <p id="totalCarbs">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Fat</h5>
-                  <p id="totalFat">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Fiber</h5>
-                  <p id="totalFiber">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Sugar</h5>
-                  <p id="totalSugar">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Sat. Fat</h5>
-                  <p id="totalSaturatedFat">0</p>
-                  <small>g</small>
-                </div>
-                <div class="nutrition-item">
-                  <h5>Sodium</h5>
-                  <p id="totalSodium">0</p>
-                  <small>mg</small>
-                </div>
-              </div>
-            </div>
-
-            <!-- Food Items List -->
-            <div class="section-card">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4><i class="bi bi-list-ul"></i> Food Items (<span id="itemCount">0</span>)</h4>
-                <div class="btn-group btn-group-sm" role="group">
-                  <button type="button" class="btn btn-outline-secondary" onclick="clearAllItems()">
-                    <i class="bi bi-trash"></i> Clear All
-                  </button>
-                  <button type="button" class="btn btn-outline-primary" onclick="exportData()">
-                    <i class="bi bi-download"></i> Export
-                  </button>
-                </div>
-              </div>
-              
-              <div id="foodItemsList">
-                <div class="empty-state text-center py-5">
-                  <i class="bi bi-bowl display-4 text-muted mb-3"></i>
-                  <p class="text-muted">No food items added yet. Use smart analysis or add items manually above.</p>
-                </div>
-              </div>
+          <div id="smart-analysis" class="help-intro section-card mb-4">
+            <h4 class="help-intro-title">
+              <i class="bi bi-search"></i> Smart Food Analysis
+            </h4>
+            <p class="help-intro-text">
+              Our main feature! Describe your meals naturally and get detailed nutrition analysis.
+              Example: "I had scrambled eggs with toast and butter for breakfast"
+            </p>
+            <div class="help-quick-tips">
+              <h5><i class="bi bi-star"></i> Tips:</h5>
+              <ul>
+                <li>Be specific about portions when possible</li>
+                <li>Mention cooking methods (grilled, fried, baked)</li>
+                <li>Include brands for packaged foods</li>
+                <li>Edit items after analysis if needed</li>
+              </ul>
             </div>
           </div>
+
+          <div id="chat-feature" class="section-card mb-4">
+            <h4 class="mb-3">
+              <i class="bi bi-chat-dots"></i> Chat with Your Data
+            </h4>
+            <p>Ask questions about your nutrition data! Get insights, trends, and recommendations based on your eating patterns.</p>
+          </div>
+
+          <div id="data-saving" class="section-card mb-4">
+            <h4 class="mb-3">
+              <i class="bi bi-save"></i> Save & Export Data
+            </h4>
+            <p>Save your daily nutrition as named events, export to CSV, and track your progress over time.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Manual Add Modal -->
+  <div class="modal fade" id="manualAddModal" tabindex="-1" aria-labelledby="manualAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="manualAddModalLabel">
+            <i class="bi bi-plus-circle"></i> Add Food Item Manually
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="manualAddForm" class="needs-validation" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="itemName" class="form-label">Food Item</label>
+                <input type="text" id="itemName" class="form-control" placeholder="e.g., Banana" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemCalories" class="form-label">Calories</label>
+                <input type="number" id="itemCalories" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemProtein" class="form-label">Protein (g)</label>
+                <input type="number" id="itemProtein" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemCarbs" class="form-label">Carbs (g)</label>
+                <input type="number" id="itemCarbs" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemFat" class="form-label">Fat (g)</label>
+                <input type="number" id="itemFat" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemFiber" class="form-label">Fiber (g)</label>
+                <input type="number" id="itemFiber" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemSugar" class="form-label">Sugar (g)</label>
+                <input type="number" id="itemSugar" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemSaturatedFat" class="form-label">Saturated Fat (g)</label>
+                <input type="number" id="itemSaturatedFat" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="itemSodium" class="form-label">Sodium (mg)</label>
+                <input type="number" id="itemSodium" class="form-control" min="0" step="1">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-success" onclick="nutritionTracker.submitManualForm()">
+            <i class="bi bi-plus"></i> Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Item Modal -->
+  <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editItemModalLabel">
+            <i class="bi bi-pencil"></i> Edit Food Item
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editItemForm" class="needs-validation" novalidate>
+            <input type="hidden" id="editItemId">
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="editItemName" class="form-label">Food Item</label>
+                <input type="text" id="editItemName" class="form-control" placeholder="e.g., Banana" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemCalories" class="form-label">Calories</label>
+                <input type="number" id="editItemCalories" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemProtein" class="form-label">Protein (g)</label>
+                <input type="number" id="editItemProtein" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemCarbs" class="form-label">Carbs (g)</label>
+                <input type="number" id="editItemCarbs" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemFat" class="form-label">Fat (g)</label>
+                <input type="number" id="editItemFat" class="form-control" min="0" step="0.1" required>
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemFiber" class="form-label">Fiber (g)</label>
+                <input type="number" id="editItemFiber" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemSugar" class="form-label">Sugar (g)</label>
+                <input type="number" id="editItemSugar" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemSaturatedFat" class="form-label">Saturated Fat (g)</label>
+                <input type="number" id="editItemSaturatedFat" class="form-control" min="0" step="0.1">
+              </div>
+              <div class="col-6 col-md-3">
+                <label for="editItemSodium" class="form-label">Sodium (mg)</label>
+                <input type="number" id="editItemSodium" class="form-control" min="0" step="1">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="submitEditForm()">
+            <i class="bi bi-check"></i> Update Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Day Modal -->
+  <div class="modal fade" id="saveDayModal" tabindex="-1" aria-labelledby="saveDayModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="saveDayModalLabel">
+            <i class="bi bi-save"></i> Save Today's Data
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="saveDayForm">
+            <div class="mb-3">
+              <label for="eventName" class="form-label">Event Name</label>
+              <input type="text" id="eventName" class="form-control" placeholder="e.g., Monday Meals, Cheat Day, etc." required>
+            </div>
+            <div class="mb-3">
+              <label for="eventNotes" class="form-label">Notes (optional)</label>
+              <textarea id="eventNotes" class="form-control" rows="3" placeholder="Any notes about this day/event..."></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="nutritionTracker.confirmSaveDay()">
+            <i class="bi bi-save"></i> Save Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions Modal -->
+  <div class="modal fade" id="instructionsModal" tabindex="-1" aria-labelledby="instructionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="instructionsModalLabel">
+            <i class="bi bi-gear"></i> Coach Instructions
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-muted mb-3">Add personal instructions for your nutrition coach. These will be included in every conversation.</p>
+          
+          <form id="instructionsForm">
+            <div class="mb-3">
+              <label for="dietaryGoals" class="form-label">Dietary Goals</label>
+              <textarea 
+                id="dietaryGoals" 
+                class="form-control" 
+                rows="3"
+                placeholder="e.g., I want to eat maximum 50g of sugar per day, increase protein to 120g daily..."
+              ></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="dietaryRestrictions" class="form-label">Dietary Restrictions</label>
+              <textarea 
+                id="dietaryRestrictions" 
+                class="form-control" 
+                rows="3"
+                placeholder="e.g., I'm lactose intolerant, avoiding gluten, vegetarian..."
+              ></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="healthConditions" class="form-label">Health Conditions (optional)</label>
+              <textarea 
+                id="healthConditions" 
+                class="form-control" 
+                rows="2"
+                placeholder="e.g., diabetes, high blood pressure, training for marathon..."
+              ></textarea>
+            </div>
+            
+            <div class="mb-3">
+              <label for="preferences" class="form-label">Coaching Style Preferences</label>
+              <textarea 
+                id="preferences" 
+                class="form-control" 
+                rows="2"
+                placeholder="e.g., be direct and motivating, focus on sustainable habits, remind me about hydration..."
+              ></textarea>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="nutritionTracker.saveInstructions()">
+            <i class="bi bi-save"></i> Save Instructions
+          </button>
         </div>
       </div>
     </div>

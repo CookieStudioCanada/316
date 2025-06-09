@@ -11,23 +11,395 @@
   --transition: all 0.2s ease;
 }
 
+/* CSS Reset for proper header positioning */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 /* Base custom styles */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg);
   color: var(--primary);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding-top: 76px; /* Account for fixed navbar */
+}
+
+/* Navbar Styles */
+.navbar {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid #444;
+  margin: 0 !important;
+  padding: 0;
+  top: 0 !important;
+  position: fixed !important;
+  width: 100% !important;
+  z-index: 1030;
+  background-color: #212529 !important;
+}
+
+.navbar .container-fluid {
+  margin: 0;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-collapse {
+  background-color: #212529;
+}
+
+.navbar-collapse.collapsing,
+.navbar-collapse.show {
+  background-color: #212529 !important;
+}
+
+.navbar-brand {
+  font-size: 1.4rem;
+  color: var(--white) !important;
+}
+
+.navbar-brand:hover {
+  color: var(--white) !important;
+}
+
+.navbar-brand .text-success {
+  color: #28a745 !important;
+}
+
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px;
+  margin: 0 0.5rem;
+  transition: var(--transition);
+  background: none;
+  border: none;
+  text-align: left;
+  width: auto;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--white) !important;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--white) !important;
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.navbar-toggler {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
 }
 
 /* Custom container styling */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  padding: 1rem;
+.container-fluid {
+  max-width: 1400px;
   margin: 0 auto;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--white), var(--bg));
+  border-radius: 16px;
+  padding: 2rem;
+  border: 2px solid var(--border);
+  margin-bottom: 2rem;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--accent);
+  margin-bottom: 0;
+}
+
+.quick-stats {
+  text-align: center;
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Chat Styles */
+/* Default chat container for desktop */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  min-height: 500px;
+  max-height: 700px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--white);
+  position: relative;
+}
+
+.chat-messages-wrapper {
+  flex: 1;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.chat-messages {
+  height: 100%;
+  overflow-y: auto;
+  padding: 1.5rem;
+  scroll-behavior: smooth;
+}
+
+.chat-message {
+  margin-bottom: 1.5rem;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.message-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  max-width: 80%;
+}
+
+.user-message .message-content {
+  margin-left: auto;
+  flex-direction: row-reverse;
+}
+
+.bot-message .message-content {
+  margin-right: auto;
+}
+
+.chat-message i {
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.message-text {
+  background: var(--white);
+  padding: 1rem 1.25rem;
+  border-radius: 18px;
+  border: 2px solid var(--border);
+  line-height: 1.6;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.user-message .message-text {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.bot-message .message-text {
+  background: var(--white);
+  color: var(--primary);
+}
+
+/* Format AI responses with better styling */
+.message-text strong {
+  font-weight: 700;
+  color: inherit;
+}
+
+.bot-message .message-text strong {
+  color: var(--primary);
+}
+
+.user-message .message-text strong {
+  color: var(--white);
+}
+
+.message-text em {
+  font-style: italic;
+  color: inherit;
+}
+
+.message-text code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+}
+
+/* Typing indicator */
+.typing-indicator .message-text {
+  padding: 1rem 1.5rem;
+}
+
+.typing-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.typing-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+}
+
+.chat-input-container {
+  padding: 1.5rem;
+  background: var(--white);
+  border-top: 2px solid var(--border);
+  flex-shrink: 0;
+}
+
+.chat-input-container .form-control {
+  border-radius: 25px;
+  border: 2px solid var(--border);
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.chat-input-container .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+.chat-input-container .btn {
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Saved Data Cards */
+.saved-data-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.saved-data-card {
+  transition: var(--transition);
+  height: 100%;
+}
+
+.saved-data-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.saved-data-card .card {
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  height: 100%;
+  transition: var(--transition);
+}
+
+.saved-data-card:hover .card {
+  border-color: var(--border-hover);
+}
+
+.saved-event-notes {
+  background: var(--bg);
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-style: italic;
+}
+
+.nutrition-summary-mini {
+  background: var(--bg);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.mini-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mini-stat strong {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.mini-stat small {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: 0.25rem;
 }
 
 /* Custom form elements */
@@ -190,6 +562,18 @@ body {
   transform: translateY(-1px);
 }
 
+.btn-outline-info {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-info:hover {
+  color: var(--white);
+  background-color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
 .btn-outline-danger {
   color: var(--primary);
   border-color: var(--primary);
@@ -222,6 +606,18 @@ body {
 .btn-secondary:hover {
   background-color: var(--primary-light);
   border-color: var(--primary-light);
+}
+
+.btn-outline-success {
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-outline-success:hover {
+  color: var(--white);
+  background-color: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 /* Enhanced Nutrition Grid */
@@ -286,32 +682,6 @@ body {
 
 .card-body {
   padding: 2.5rem;
-}
-
-/* Navigation Tabs */
-.nav-tabs {
-  border-bottom: 2px solid var(--border);
-}
-
-.nav-tabs .nav-link {
-  color: var(--accent);
-  font-weight: 600;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 12px 12px 0 0;
-  transition: var(--transition);
-}
-
-.nav-tabs .nav-link:hover {
-  color: var(--primary);
-  border-color: transparent;
-}
-
-.nav-tabs .nav-link.active {
-  color: var(--primary);
-  font-weight: 700;
-  background-color: var(--white);
-  border-color: var(--border) var(--border) var(--white);
 }
 
 /* Form Enhancements */
@@ -406,7 +776,7 @@ body {
 }
 
 /* Animation Improvements */
-.food-item-card {
+.food-item-card, .saved-data-card, .chat-message {
   animation: fadeInUp 0.4s ease-out;
 }
 
@@ -673,71 +1043,6 @@ body {
   color: var(--accent);
 }
 
-/* Nutrition Targets Help Styles */
-.nutrition-targets {
-  background: var(--bg);
-  border-radius: 8px;
-  padding: 1.5rem;
-  border: 2px solid var(--border);
-}
-
-.target-section {
-  background: var(--white);
-  border-radius: 8px;
-  padding: 1.25rem;
-  border: 2px solid var(--border);
-  margin-bottom: 1.5rem;
-}
-
-.target-section:last-child {
-  margin-bottom: 0;
-}
-
-.target-ranges {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.target-item {
-  padding: 0.75rem;
-  background: var(--bg);
-  border-radius: 6px;
-  border-left: 4px solid var(--primary);
-}
-
-.target-item strong {
-  color: var(--primary);
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.target-item small {
-  color: var(--accent);
-  font-size: 0.85rem;
-}
-
-/* Accordion Styles */
-.accordion-item {
-  border-color: var(--border);
-}
-
-.accordion-button {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.accordion-button:not(.collapsed) {
-  background-color: var(--bg);
-  color: var(--primary);
-  box-shadow: none;
-}
-
-.accordion-button:focus {
-  box-shadow: none;
-  border-color: var(--border);
-}
-
 /* Table of Contents */
 .toc {
   background: var(--bg);
@@ -780,14 +1085,51 @@ body {
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 1.25rem;
   }
+  
+  .saved-data-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-  .container {
+  body {
+    padding-top: 66px; /* Adjust for smaller navbar */
+  }
+
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.5rem 0.75rem !important;
+    margin: 0.1rem;
+  }
+
+  .container-fluid {
     padding: 1rem;
   }
 
-  .food-items-grid {
+  .hero-section {
+    padding: 1.5rem;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .quick-stats {
+    padding: 1rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .food-items-grid, .saved-data-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -851,16 +1193,81 @@ body {
     padding: 1rem;
   }
 
-  .nutrition-targets {
+  .saved-data-card .card-body {
     padding: 1rem;
   }
 
-  .target-section {
+  .nutrition-summary-mini {
+    padding: 0.75rem;
+  }
+
+  .mini-stat strong {
+    font-size: 1rem;
+  }
+
+  /* Mobile chat adjustments - removed body scroll lock to fix navbar */
+
+  /* Chat mobile adjustments */
+  #chatTab.show .chat-container {
+    height: calc(100vh - 120px);
+    min-height: 400px;
+    max-height: none;
+  }
+
+  #chatTab.show .chat-input-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
     padding: 1rem;
+    border-radius: 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  #chatTab.show .chat-messages {
+    padding: 1rem;
+    padding-bottom: 100px;
+  }
+
+  .chat-messages {
+    padding: 1rem;
+  }
+
+  .message-content {
+    max-width: 95%;
+  }
+
+  .message-text {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 16px;
+  }
+
+  .chat-input-container {
+    padding: 1rem;
+  }
+
+  .chat-input-container .form-control {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-input-container .btn {
+    width: 40px;
+    height: 40px;
   }
 }
 
 @media (max-width: 480px) {
+  body {
+    padding-top: 60px;
+  }
+
+  .navbar-brand {
+    font-size: 1.1rem;
+  }
+
   .nutrition-mini-grid {
     grid-template-columns: 1fr;
   }
@@ -874,7 +1281,55 @@ body {
     font-size: 0.8rem;
   }
 
-  .target-item {
-    padding: 0.5rem;
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .saved-data-card .card-body {
+    padding: 1rem;
+  }
+
+  .nutrition-summary-mini {
+    padding: 0.75rem;
+  }
+
+  .mini-stat strong {
+    font-size: 1rem;
+  }
+
+  /* Chat mobile fine-tuning - simplified */
+
+  #chatTab.show .chat-container {
+    height: calc(100vh - 110px);
+    max-height: none;
+  }
+
+  #chatTab.show .chat-input-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    padding: 0.75rem;
+    border-radius: 0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  #chatTab.show .chat-messages {
+    padding: 1rem;
+    padding-bottom: 90px;
+  }
+
+  .message-text {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
+  .chat-message i {
+    font-size: 1.25rem;
   }
 } 
