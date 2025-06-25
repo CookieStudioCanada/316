@@ -27,7 +27,7 @@ html, body {
 /* Base custom styles */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: #000000;
+  background-color: #212529;
   color: var(--primary);
   padding-top: 76px; /* Account for fixed navbar */
 }
@@ -121,7 +121,7 @@ body {
 }
 
 .tab-header h3 {
-  color: var(--primary);
+  color: var(--white);
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0;
@@ -131,7 +131,7 @@ body {
 }
 
 .tab-header h3 i {
-  color: var(--primary);
+  color: var(--white);
   font-size: 1.5rem;
 }
 
@@ -356,6 +356,11 @@ body {
 .chat-input-container .form-control:focus {
   border-color: var(--primary);
   box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.1);
+}
+
+/* Prevent mobile zoom on input focus */
+#chatInput {
+  font-size: 16px !important;
 }
 
 .chat-input-container .btn {
@@ -1855,4 +1860,33 @@ body {
 
 .help-title i {
   color: var(--primary);
-} 
+}
+
+/* Help intro description styling */
+.help-intro-description p {
+  color: var(--white) !important;
+}
+
+/* Tab header button styling */
+.tab-header .btn {
+  color: var(--white) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.tab-header .btn:hover {
+  color: var(--primary) !important;
+  background-color: var(--white) !important;
+  border-color: var(--white) !important;
+}
+
+.tab-header .btn-outline-primary {
+  color: var(--white) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.tab-header .btn-outline-secondary {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Hero Section */ 
