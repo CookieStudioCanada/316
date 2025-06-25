@@ -45,11 +45,6 @@
             </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link" id="calculatorTab-btn" data-target="#calculatorTab" type="button">
-              <i class="bi bi-calculator me-1"></i>Calculator
-            </button>
-          </li>
-          <li class="nav-item">
             <button class="nav-link" id="helpTab-btn" data-target="#helpTab" type="button">
               <i class="bi bi-question-circle me-1"></i>Help
             </button>
@@ -65,11 +60,11 @@
       <!-- HOME TAB (Main Food Analysis) -->
       <div class="tab-pane fade show active" id="homeTab" role="tabpanel" aria-labelledby="homeTab-tab">
         <!-- Hero Section -->
-        <div class="hero-section mb-4">
+        <div class="hero-section-no-border mb-4">
           <div class="row align-items-center">
             <div class="col-md-8">
-              <h3 class="hero-title"><i class="bi bi-magic"></i> Smart Food Analysis</h3>
-              <p class="hero-subtitle">Describe your meals and get instant, detailed nutrition analysis</p>
+              <h3 class="hero-title">🍎 Nutrition Tracker</h3>
+              <p class="hero-subtitle">Describe your meals and get instant nutrition analysis</p>
             </div>
           </div>
           
@@ -77,20 +72,20 @@
             <div class="m-3">
               <textarea 
                 id="foodInput" 
-                class="form-control" 
-                rows="4"
-                placeholder="Example: For breakfast I had 2 scrambled eggs with buttered toast and orange juice. For lunch I had a grilled chicken salad with olive oil dressing..."
+                class="form-control form-control-lg" 
+                rows="5"
+                placeholder="I had scrambled eggs with toast for breakfast..."
               ></textarea>
             </div>
-            <div class="d-flex gap-2 flex-wrap">
+            <div class="d-flex gap-2 flex-wrap justify-content-center">
               <button type="submit" class="btn btn-primary btn-lg">
-                <i class="bi bi-search"></i> <span class="d-none d-sm-inline">Analyze Food</span><span class="d-sm-none">Analyze</span>
+                <i class="bi bi-search"></i> Analyze
               </button>
-              <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#manualAddModal">
-                <i class="bi bi-plus"></i> <span class="d-none d-sm-inline">Add Manually</span><span class="d-sm-none">Add</span>
+              <button type="button" class="btn btn-outline-success btn-lg btn-icon-compact" data-bs-toggle="modal" data-bs-target="#manualAddModal">
+                <i class="bi bi-plus-lg"></i> <span class="d-none d-sm-inline">Add</span>
               </button>
-              <button type="button" class="btn btn-outline-info" onclick="saveCurrentDay()">
-                <i class="bi bi-save"></i> <span class="d-none d-sm-inline">Save Today</span><span class="d-sm-none">Save</span>
+              <button type="button" class="btn btn-outline-info btn-lg btn-icon-compact" onclick="saveCurrentDay()">
+                <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Save</span>
               </button>
             </div>
           </form>
@@ -105,7 +100,7 @@
         </div>
 
         <!-- Daily Summary -->
-        <div id="dailySummary" class="section-card mb-4">
+        <div id="dailySummary" class="section-card-no-border mb-4">
           <h4><i class="bi bi-graph-up"></i> Today's Nutrition Summary</h4>
           <div class="nutrition-grid" id="nutritionTotals">
             <div class="nutrition-item">
@@ -156,10 +151,10 @@
           <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
             <h4 class="mb-0"><i class="bi bi-list-ul"></i> Today's Food Items</h4>
             <div class="btn-group btn-group-sm" role="group">
-              <button type="button" class="btn btn-outline-secondary" onclick="clearAllItems()">
+              <button type="button" class="btn btn-outline-secondary btn-icon-compact" onclick="clearAllItems()">
                 <i class="bi bi-trash"></i> <span class="d-none d-lg-inline">Clear All</span>
               </button>
-              <button type="button" class="btn btn-outline-primary" onclick="exportToCSV()">
+              <button type="button" class="btn btn-outline-primary btn-icon-compact" onclick="exportToCSV()">
                 <i class="bi bi-download"></i> <span class="d-none d-lg-inline">Export CSV</span>
               </button>
             </div>
@@ -176,7 +171,7 @@
 
       <!-- CHAT TAB -->
       <div class="tab-pane fade" id="chatTab" role="tabpanel" aria-labelledby="chatTab-tab">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="tab-header">
           <h3><i class="bi bi-chat-dots"></i> Coach</h3>
           <div class="btn-group btn-group-sm">
             <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#instructionsModal">
@@ -209,7 +204,6 @@
                 id="chatInput" 
                 class="form-control" 
                 placeholder="Ask me about your nutrition..."
-                autocomplete="off"
               >
               <button type="submit" class="btn btn-primary">
                 <i class="bi bi-send"></i>
@@ -221,7 +215,7 @@
 
       <!-- HISTORY TAB -->
       <div class="tab-pane fade" id="historyTab" role="tabpanel" aria-labelledby="historyTab-tab">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="tab-header">
           <h3><i class="bi bi-clock-history"></i> Nutrition History</h3>
           <button type="button" class="btn btn-outline-primary btn-sm" onclick="exportAllDataToCSV()">
             <i class="bi bi-download"></i> <span class="d-none d-sm-inline">Export All CSV</span><span class="d-sm-none">Export</span>
@@ -236,102 +230,135 @@
         </div>
       </div>
 
-      <!-- CALCULATOR TAB -->
-      <div class="tab-pane fade" id="calculatorTab" role="tabpanel" aria-labelledby="calculatorTab-tab">
-        <h3 class="mb-4"><i class="bi bi-calculator"></i> Calorie Deficit Calculator</h3>
-        
-        <form id="deficitForm" class="needs-validation" novalidate>
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="gender" class="form-label">Gender:</label>
-              <select id="gender" class="form-select" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="weight" class="form-label">Weight (lbs):</label>
-              <input type="number" id="weight" class="form-control" min="1" step="any" placeholder="Enter weight" required>
-            </div>
-
-            <div class="col-md-3">
-              <label class="form-label">Height:</label>
-              <input type="number" id="feet" class="form-control" min="0" placeholder="Feet" required>
-            </div>
-            <div class="col-md-3">
-              <input type="number" id="inches" class="form-control" min="0" max="11" placeholder="Inches" required style="margin-top: 32px;">
-            </div>
-
-            <div class="col-md-6">
-              <label for="age" class="form-label">Age (years):</label>
-              <input type="number" id="age" class="form-control" min="1" placeholder="Enter your age" required>
-            </div>
-
-            <div class="col-12">
-              <label for="activity" class="form-label">Activity Level:</label>
-              <select id="activity" class="form-select" required>
-                <option value="1.2">Sedentary (little or no exercise)</option>
-                <option value="1.375">Lightly active (light exercise 1-3 days/week)</option>
-                <option value="1.55">Moderately active (moderate exercise 3–5 days/week)</option>
-                <option value="1.725">Very active (hard exercise 6–7 days/week)</option>
-                <option value="1.9">Super active (physical job + training)</option>
-              </select>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary w-100 py-2 mt-4">Calculate Calories</button>
-        </form>
-
-        <div id="result" class="mt-4 d-none"></div>
-      </div>
-
       <!-- HELP TAB -->
       <div class="tab-pane fade" id="helpTab" role="tabpanel" aria-labelledby="helpTab-tab">
-        <h3 class="mb-4"><i class="bi bi-question-circle"></i> Nutrition Tracker Guide</h3>
+        <div class="tab-header">
+          <h3><i class="bi bi-question-circle-fill"></i> Getting started</h3>
+        </div>
         
-        <div class="nutrition-help-content">
-          <div class="toc section-card mb-4">
-            <h4><i class="bi bi-list"></i> Quick Start</h4>
-            <ul>
-              <li><a href="#smart-analysis">Smart Food Analysis</a></li>
-              <li><a href="#chat-feature">Chat with Your Data</a></li>
-              <li><a href="#data-saving">Save & Export Data</a></li>
-              <li><a href="#calorie-calculator">Calorie Calculator</a></li>
-            </ul>
-          </div>
-
-          <div id="smart-analysis" class="help-intro section-card mb-4">
-            <h4 class="help-intro-title">
-              <i class="bi bi-search"></i> Smart Food Analysis
-            </h4>
-            <p class="help-intro-text">
-              Our main feature! Describe your meals naturally and get detailed nutrition analysis.
-              Example: "I had scrambled eggs with toast and butter for breakfast"
-            </p>
-            <div class="help-quick-tips">
-              <h5><i class="bi bi-star"></i> Tips:</h5>
-              <ul>
-                <li>Be specific about portions when possible</li>
-                <li>Mention cooking methods (grilled, fried, baked)</li>
-                <li>Include brands for packaged foods</li>
-                <li>Edit items after analysis if needed</li>
-              </ul>
+        <div class="help-content">
+          <!-- Quick Start Guide -->
+          <div class="help-section section-card mb-4">
+            <div class="help-title"><i class="bi bi-rocket-takeoff"></i> Quick Start Guide</div>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <div class="help-step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h5>Track Your Meals</h5>
+                    <p>Simply describe what you ate in natural language. Our AI will analyze and break down the nutrition for you.</p>
+                    <small class="text-muted">Example: "I had oatmeal with berries and a coffee for breakfast"</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="help-step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h5>Get Personalized Coaching</h5>
+                    <p>Chat with your nutrition coach for insights, tips, and personalized advice based on your eating patterns.</p>
+                    <small class="text-muted">Set up your preferences in Coach → Instructions</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="help-step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h5>Track Progress</h5>
+                    <p>Save your daily nutrition data and review your history to see patterns and improvements over time.</p>
+                    <small class="text-muted">Use the "Save" button to store your daily data</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="help-step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                    <h5>Export & Share</h5>
+                    <p>Export your nutrition data to CSV for further analysis or sharing with healthcare providers.</p>
+                    <small class="text-muted">Available in both daily and historical views</small>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div id="chat-feature" class="section-card mb-4">
-            <h4 class="mb-3">
-              <i class="bi bi-chat-dots"></i> Chat with Your Data
-            </h4>
-            <p>Ask questions about your nutrition data! Get insights, trends, and recommendations based on your eating patterns.</p>
+          
+          <!-- Features Overview -->
+          <div class="help-section section-card mb-4">
+            <div class="help-title"><i class="bi bi-stars"></i> Key Features</div>
+            <div class="feature-grid">
+              <div class="feature-item">
+                <i class="bi bi-magic feature-icon"></i>
+                <h5>Smart Analysis</h5>
+                <p>Describe meals naturally - our AI understands cooking methods, portions, and ingredients.</p>
+              </div>
+              <div class="feature-item">
+                <i class="bi bi-chat-dots feature-icon"></i>
+                <h5>Personal Coach</h5>
+                <p>Get personalized advice, meal suggestions, and insights based on your nutrition goals.</p>
+              </div>
+              <div class="feature-item">
+                <i class="bi bi-graph-up feature-icon"></i>
+                <h5>Progress Tracking</h5>
+                <p>Monitor your nutrition trends, save favorite meals, and track your health journey.</p>
+              </div>
+              <div class="feature-item">
+                <i class="bi bi-download feature-icon"></i>
+                <h5>Data Export</h5>
+                <p>Export detailed nutrition reports to CSV for analysis or sharing with professionals.</p>
+              </div>
+            </div>
           </div>
-
-          <div id="data-saving" class="section-card mb-4">
-            <h4 class="mb-3">
-              <i class="bi bi-save"></i> Save & Export Data
-            </h4>
-            <p>Save your daily nutrition as named events, export to CSV, and track your progress over time.</p>
+          
+          <!-- Tips & Best Practices -->
+          <div class="help-section section-card mb-4">
+            <div class="help-title"><i class="bi bi-lightbulb"></i> Tips for Better Results</div>
+            <div class="row g-4">
+              <div class="col-md-6">
+                <h5><i class="bi bi-check-circle text-success"></i> Do's</h5>
+                <ul class="help-list">
+                  <li>Be specific about portions (e.g., "1 cup", "150g", "medium apple")</li>
+                  <li>Mention cooking methods (grilled, fried, steamed, raw)</li>
+                  <li>Include brands for packaged foods when possible</li>
+                  <li>Describe ingredients in mixed dishes</li>
+                  <li>Set up your coach preferences for personalized advice</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <h5><i class="bi bi-x-circle text-danger"></i> Avoid</h5>
+                <ul class="help-list">
+                  <li>Vague descriptions like "some food" or "a little"</li>
+                  <li>Forgetting to mention added fats, oils, or sauces</li>
+                  <li>Mixing multiple meals in one analysis</li>
+                  <li>Using unclear abbreviations or slang</li>
+                  <li>Ignoring beverages and snacks</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Common Questions -->
+          <div class="help-section section-card">
+            <div class="help-title"><i class="bi bi-question-circle"></i> Common Questions</div>
+            <div class="faq-grid">
+              <div class="faq-item">
+                <h5>How accurate is the nutrition analysis?</h5>
+                <p>Our AI uses comprehensive nutrition databases and provides estimates based on standard food compositions. For exact values, consider using a food scale and specific brand information.</p>
+              </div>
+              <div class="faq-item">
+                <h5>Can I edit the analyzed results?</h5>
+                <p>Yes! Click the edit button on any food item to adjust portions, nutrition values, or descriptions to match your actual intake.</p>
+              </div>
+              <div class="faq-item">
+                <h5>What can I ask the nutrition coach?</h5>
+                <p>Ask about meal planning, nutrition goals, dietary concerns, food substitutions, or analysis of your eating patterns. The coach knows your data and preferences.</p>
+              </div>
+              <div class="faq-item">
+                <h5>How is my data stored?</h5>
+                <p>All data is stored locally in your browser. Nothing is sent to external servers except for the AI analysis requests. Your privacy is protected.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -502,60 +529,157 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="instructionsModalLabel">
-            <i class="bi bi-gear"></i> Coach Instructions
+            <i class="bi bi-person-gear"></i> Personalize Your Coach
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p class="text-muted mb-3">Add personal instructions for your nutrition coach. These will be included in every conversation.</p>
+          <div class="alert alert-info mb-4">
+            <i class="bi bi-info-circle"></i>
+            <strong>What your coach knows:</strong> Your daily nutrition totals, recent food items, saved nutrition history, and these personal preferences you set below.
+          </div>
+          
+          <p class="text-muted mb-4">Help your nutrition coach give you personalized advice by sharing your goals, restrictions, and preferences.</p>
           
           <form id="instructionsForm">
-            <div class="mb-3">
-              <label for="dietaryGoals" class="form-label">Dietary Goals</label>
+            <div class="mb-4">
+              <label for="dietaryGoals" class="form-label">
+                <i class="bi bi-target"></i> <strong>Your Nutrition Goals</strong>
+              </label>
               <textarea 
                 id="dietaryGoals" 
                 class="form-control" 
                 rows="3"
-                placeholder="e.g., I want to eat maximum 50g of sugar per day, increase protein to 120g daily..."
+                placeholder="e.g., Lose 10 pounds by summer, eat 120g protein daily, limit sugar to 25g per day, increase fiber intake..."
               ></textarea>
+              <small class="form-text text-muted">What are you trying to achieve with your nutrition?</small>
             </div>
             
-            <div class="mb-3">
-              <label for="dietaryRestrictions" class="form-label">Dietary Restrictions</label>
+            <div class="mb-4">
+              <label for="dietaryRestrictions" class="form-label">
+                <i class="bi bi-shield-check"></i> <strong>Dietary Restrictions & Allergies</strong>
+              </label>
               <textarea 
                 id="dietaryRestrictions" 
                 class="form-control" 
                 rows="3"
-                placeholder="e.g., I'm lactose intolerant, avoiding gluten, vegetarian..."
+                placeholder="e.g., Vegetarian, lactose intolerant, gluten-free, nut allergy, low sodium diet..."
               ></textarea>
+              <small class="form-text text-muted">Any foods you avoid or can't eat?</small>
             </div>
             
-            <div class="mb-3">
-              <label for="healthConditions" class="form-label">Health Conditions (optional)</label>
+            <div class="mb-4">
+              <label for="healthConditions" class="form-label">
+                <i class="bi bi-heart-pulse"></i> <strong>Health Context</strong> <span class="text-muted">(optional)</span>
+              </label>
               <textarea 
                 id="healthConditions" 
                 class="form-control" 
                 rows="2"
-                placeholder="e.g., diabetes, high blood pressure, training for marathon..."
+                placeholder="e.g., Training for marathon, managing diabetes, high blood pressure, building muscle..."
               ></textarea>
+              <small class="form-text text-muted">Any health conditions or fitness goals that affect your nutrition?</small>
             </div>
             
             <div class="mb-3">
-              <label for="preferences" class="form-label">Coaching Style Preferences</label>
+              <label for="preferences" class="form-label">
+                <i class="bi bi-chat-heart"></i> <strong>Coaching Style</strong> <span class="text-muted">(optional)</span>
+              </label>
               <textarea 
                 id="preferences" 
                 class="form-control" 
                 rows="2"
-                placeholder="e.g., be direct and motivating, focus on sustainable habits, remind me about hydration..."
+                placeholder="e.g., Be encouraging and supportive, give me direct feedback, focus on sustainable habits, remind me about hydration..."
               ></textarea>
+              <small class="form-text text-muted">How would you like your coach to communicate with you?</small>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-primary" onclick="nutritionTracker.saveInstructions()">
-            <i class="bi bi-save"></i> Save Instructions
+            <i class="bi bi-save"></i> Save My Preferences
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Event Modal -->
+  <div class="modal fade" id="viewEventModal" tabindex="-1" aria-labelledby="viewEventModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewEventModalLabel">
+            <i class="bi bi-eye"></i> <span id="viewEventTitle">Event Details</span>
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <small class="text-muted">Date:</small>
+              <p class="mb-0" id="viewEventDate">-</p>
+            </div>
+            <div class="col-md-6">
+              <small class="text-muted">Notes:</small>
+              <p class="mb-0" id="viewEventNotes">-</p>
+            </div>
+          </div>
+
+          <!-- Nutrition Summary -->
+          <h6 class="mb-3"><i class="bi bi-graph-up"></i> Nutrition Summary</h6>
+          <div class="nutrition-grid mb-4">
+            <div class="nutrition-item">
+              <h5>Calories</h5>
+              <p id="viewTotalCalories">0</p>
+              <small>kcal</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Protein</h5>
+              <p id="viewTotalProtein">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Carbs</h5>
+              <p id="viewTotalCarbs">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Fat</h5>
+              <p id="viewTotalFat">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Fiber</h5>
+              <p id="viewTotalFiber">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sugar</h5>
+              <p id="viewTotalSugar">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sat. Fat</h5>
+              <p id="viewTotalSaturatedFat">0</p>
+              <small>g</small>
+            </div>
+            <div class="nutrition-item">
+              <h5>Sodium</h5>
+              <p id="viewTotalSodium">0</p>
+              <small>mg</small>
+            </div>
+          </div>
+
+          <!-- Food Items -->
+          <h6 class="mb-3"><i class="bi bi-list-ul"></i> Food Items</h6>
+          <div id="viewEventItems" class="saved-event-items">
+            <!-- Items will be populated by JavaScript -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

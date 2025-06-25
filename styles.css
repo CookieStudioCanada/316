@@ -27,7 +27,7 @@ html, body {
 /* Base custom styles */
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg);
+  background-color: #000000;
   color: var(--primary);
   padding-top: 76px; /* Account for fixed navbar */
 }
@@ -109,6 +109,35 @@ body {
 .container-fluid {
   max-width: 1400px;
   margin: 0 auto;
+}
+
+/* Tab Header Styling */
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-left: 1rem;
+}
+
+.tab-header h3 {
+  color: var(--primary);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.tab-header h3 i {
+  color: var(--primary);
+  font-size: 1.5rem;
+}
+
+.tab-header .btn-group,
+.tab-header .btn {
+  flex-shrink: 0;
 }
 
 /* Hero Section */
@@ -1257,6 +1286,63 @@ body {
     width: 40px;
     height: 40px;
   }
+
+  .hero-section-no-border {
+    padding: 1.5rem;
+  }
+
+  .section-card-no-border {
+    padding: 1.5rem;
+  }
+
+  /* Mobile button improvements - show only icons */
+  .btn .d-none.d-sm-inline {
+    display: none !important;
+  }
+
+  /* Ensure buttons are properly sized */
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  /* Chat info alert mobile */
+  .chat-info .alert {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* Form control improvements */
+  .form-control-lg {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  /* Compact icon buttons */
+  .btn-icon-compact {
+    padding: 0.6rem 1rem;
+    min-width: 48px;
+  }
+  
+  .btn-icon-compact i {
+    font-size: 1.2rem;
+  }
+  
+  /* Ensure mobile buttons show only icons */
+  .btn-icon-compact .d-none.d-sm-inline,
+  .btn-icon-compact .d-none.d-lg-inline {
+    display: none !important;
+  }
+
+  /* Tab header mobile styles */
+  .tab-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .tab-header h3 {
+    font-size: 1.5rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1332,4 +1418,441 @@ body {
   .chat-message i {
     font-size: 1.25rem;
   }
+}
+
+/* Hero Section without border */
+.hero-section-no-border {
+  background: linear-gradient(135deg, var(--white), var(--bg));
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+/* Section card without border */
+.section-card-no-border {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 2rem;
+  transition: var(--transition);
+}
+
+.section-card-no-border h4 {
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-card-no-border h4 i {
+  color: var(--primary);
+}
+
+/* Chat info alert styling */
+.chat-info .alert {
+  background-color: var(--bg);
+  border: 2px solid var(--border);
+  color: var(--primary);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.chat-info .alert i {
+  color: var(--primary);
+  margin-right: 0.5rem;
+}
+
+/* Compact icon buttons */
+.btn-icon-compact {
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 50px;
+}
+
+.btn-icon-compact i {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Food Items header alignment */
+.section-card .d-flex.justify-content-between {
+  align-items: center !important;
+  flex-wrap: nowrap;
+}
+
+.section-card .btn-group {
+  flex-shrink: 0;
+}
+
+/* Ensure proper alignment on mobile */
+@media (max-width: 576px) {
+  .section-card .d-flex.justify-content-between {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1rem;
+  }
+  
+  .section-card h4 {
+    flex: 1;
+    margin-bottom: 0 !important;
+  }
+}
+
+/* Help Section Styles */
+.help-content {
+  max-width: 1200px;
+}
+
+.help-section {
+  margin-bottom: 2rem;
+}
+
+/* Help Steps */
+.help-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  height: 100%;
+}
+
+.step-number {
+  background: var(--primary);
+  color: var(--white);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.step-content h5 {
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.step-content p {
+  color: var(--primary);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+/* Feature Grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  transition: var(--transition);
+}
+
+.feature-item:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.feature-item h5 {
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.feature-item p {
+  color: var(--accent);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Help Lists */
+.help-list {
+  list-style: none;
+  padding: 0;
+}
+
+.help-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+  line-height: 1.5;
+}
+
+.help-list li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+/* FAQ Grid */
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.faq-item {
+  padding: 1.25rem;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+
+.faq-item h5 {
+  color: var(--primary);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.faq-item p {
+  color: var(--accent);
+  line-height: 1.5;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* View Event Modal Styles */
+.saved-event-items {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.saved-food-item {
+  padding: 1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: var(--bg);
+}
+
+.saved-food-item:last-child {
+  margin-bottom: 0;
+}
+
+.saved-food-item h6 {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.nutrition-mini-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nutrition-tag {
+  background: var(--white);
+  color: var(--primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+}
+
+/* Mobile Responsive for Help */
+@media (max-width: 768px) {
+  .help-content {
+    padding: 0;
+  }
+  
+  .help-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .help-section .section-card {
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  
+  .help-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .help-step {
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .help-step:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+  }
+  
+  .step-content h5 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .step-content p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  
+  .step-content small {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  
+  .feature-item {
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .feature-item h5 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature-item p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  
+  .faq-item {
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .faq-item h5 {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+  
+  .faq-item p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  
+  .help-list li {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+  }
+  
+  /* Add more spacing between sections on mobile */
+  .help-section:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .help-section .section-card {
+    padding: 1rem;
+  }
+  
+  .help-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
+  }
+  
+  .help-step {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+  }
+  
+  .step-content h5 {
+    font-size: 0.95rem;
+  }
+  
+  .step-content p {
+    font-size: 0.85rem;
+  }
+  
+  .step-content small {
+    font-size: 0.75rem;
+  }
+  
+  .feature-item {
+    padding: 1rem;
+  }
+  
+  .feature-item h5 {
+    font-size: 0.95rem;
+  }
+  
+  .feature-item p {
+    font-size: 0.85rem;
+  }
+  
+  .faq-item {
+    padding: 0.75rem;
+  }
+  
+  .faq-item h5 {
+    font-size: 0.9rem;
+  }
+  
+  .faq-item p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Clean help title styling */
+.help-title {
+  color: var(--primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.help-title i {
+  color: var(--primary);
 } 

@@ -50,15 +50,6 @@ class NutritionTracker {
       e.target.classList.add('was-validated');
     });
 
-    // Calorie deficit form
-    document.getElementById('deficitForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (e.target.checkValidity()) {
-        this.calculateDeficit();
-      }
-      e.target.classList.add('was-validated');
-    });
-
     // Chat form
     document.getElementById('chatForm').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -798,6 +789,9 @@ class NutritionTracker {
                 </small>
               </div>
               <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-success" onclick="nutritionTracker.viewSavedEvent(${event.id})" title="View Details">
+                  <i class="bi bi-eye"></i>
+                </button>
                 <button class="btn btn-outline-info" onclick="nutritionTracker.exportEventToCSV(${event.id})" title="Export CSV">
                   <i class="bi bi-download"></i>
                 </button>
@@ -845,6 +839,53 @@ class NutritionTracker {
         </div>
       </div>
     `;
+  }
+
+  // View saved event in modal
+  viewSavedEvent(eventId) {
+    const event = this.savedData.find(e => e.id === eventId);
+    if (!event) {
+      this.showError('Event not found');
+      return;
+    }
+
+    // Populate modal with event data
+    document.getElementById('viewEventTitle').textContent = event.name;
+    document.getElementById('viewEventDate').textContent = new Date(event.date).toLocaleDateString();
+    document.getElementById('viewEventNotes').textContent = event.notes || 'No notes';
+    
+    // Update nutrition totals
+    document.getElementById('viewTotalCalories').textContent = Math.round(event.totals.calories);
+    document.getElementById('viewTotalProtein').textContent = Math.round(event.totals.protein);
+    document.getElementById('viewTotalCarbs').textContent = Math.round(event.totals.carbs);
+    document.getElementById('viewTotalFat').textContent = Math.round(event.totals.fat);
+    document.getElementById('viewTotalFiber').textContent = Math.round(event.totals.fiber);
+    document.getElementById('viewTotalSugar').textContent = Math.round(event.totals.sugar);
+    document.getElementById('viewTotalSaturatedFat').textContent = Math.round(event.totals.saturatedFat);
+    document.getElementById('viewTotalSodium').textContent = Math.round(event.totals.sodium);
+    
+    // Create food items list
+    const itemsHtml = event.items.map(item => `
+      <div class="saved-food-item">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h6 class="mb-1">${item.item}</h6>
+            <div class="nutrition-mini-display">
+              ${item.calories > 0 ? `<span class="nutrition-tag">${Math.round(item.calories)} cal</span>` : ''}
+              ${item.protein > 0 ? `<span class="nutrition-tag">${Math.round(item.protein)}g protein</span>` : ''}
+              ${item.carbs > 0 ? `<span class="nutrition-tag">${Math.round(item.carbs)}g carbs</span>` : ''}
+              ${item.fat > 0 ? `<span class="nutrition-tag">${Math.round(item.fat)}g fat</span>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    document.getElementById('viewEventItems').innerHTML = itemsHtml;
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('viewEventModal'));
+    modal.show();
   }
 
   // EXPORT METHODS
@@ -1114,141 +1155,6 @@ class NutritionTracker {
         alertDiv.remove();
       }
     }, 5000);
-  }
-
-  // Calorie deficit calculation (kept from original)
-  calculateDeficit() {
-    const gender = document.getElementById('gender').value;
-    const weightLbs = parseFloat(document.getElementById('weight').value);
-    const feet = parseInt(document.getElementById('feet').value);
-    const inches = parseInt(document.getElementById('inches').value);
-    const age = parseInt(document.getElementById('age').value);
-    const activityFactor = parseFloat(document.getElementById('activity').value);
-
-    if (isNaN(weightLbs) || isNaN(feet) || isNaN(inches) || isNaN(age)) {
-      const resultDiv = document.getElementById('result');
-      resultDiv.innerHTML = '<div class="alert alert-danger">Please fill in all fields correctly.</div>';
-      resultDiv.classList.remove('d-none');
-      return;
-    }
-
-    const weight = weightLbs * 0.453592;
-    const height = (feet * 30.48) + (inches * 2.54);
-
-    let bmr;
-    if (gender === "male") {
-      bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
-    } else {
-      bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
-    }
-
-    const tdee = bmr * activityFactor;
-    const mildDeficit = tdee - 250;
-    const moderateDeficit = tdee - 500;
-    const aggressiveDeficit = tdee - 750;
-
-    const weeklyLossMild = (250 * 7) / 7700;
-    const weeklyLossModerate = (500 * 7) / 7700;
-    const weeklyLossAggressive = (750 * 7) / 7700;
-
-    const resultDiv = document.getElementById('result');
-    resultDiv.innerHTML = `
-      <div class="results-wrapper">
-        <h3 class="results-title">
-          <i class="bi bi-graph-up-arrow"></i>
-          Your Results
-        </h3>
-        
-        <div class="row g-4 mb-4">
-          <div class="col-md-6">
-            <div class="metric-card">
-              <div class="metric-icon">
-                <i class="bi bi-fire"></i>
-              </div>
-              <div class="metric-content">
-                <h4>Base Metabolic Rate</h4>
-                <div class="metric-value">${Math.round(bmr)}</div>
-                <div class="metric-unit">calories/day</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="metric-card">
-              <div class="metric-icon">
-                <i class="bi bi-lightning-charge"></i>
-              </div>
-              <div class="metric-content">
-                <h4>Daily Energy Expenditure</h4>
-                <div class="metric-value">${Math.round(tdee)}</div>
-                <div class="metric-unit">calories/day</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h4 class="section-title">
-          <i class="bi bi-calendar-check"></i>
-          Weight Loss Plans
-        </h4>
-        
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="plan-card">
-              <div class="plan-header mild">
-                <i class="bi bi-feather"></i>
-                <h5>Mild</h5>
-              </div>
-              <div class="plan-content">
-                <div class="plan-calories">${Math.round(mildDeficit)}</div>
-                <div class="plan-unit">calories/day</div>
-                <div class="plan-loss">
-                  <i class="bi bi-arrow-down-circle"></i>
-                  ${(weeklyLossMild * 2.20462).toFixed(1)} lbs/week
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="plan-card">
-              <div class="plan-header moderate">
-                <i class="bi bi-stars"></i>
-                <h5>Moderate</h5>
-              </div>
-              <div class="plan-content">
-                <div class="plan-calories">${Math.round(moderateDeficit)}</div>
-                <div class="plan-unit">calories/day</div>
-                <div class="plan-loss">
-                  <i class="bi bi-arrow-down-circle"></i>
-                  ${(weeklyLossModerate * 2.20462).toFixed(1)} lbs/week
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="plan-card">
-              <div class="plan-header aggressive">
-                <i class="bi bi-rocket-takeoff"></i>
-                <h5>Aggressive</h5>
-              </div>
-              <div class="plan-content">
-                <div class="plan-calories">${Math.round(aggressiveDeficit)}</div>
-                <div class="plan-unit">calories/day</div>
-                <div class="plan-loss">
-                  <i class="bi bi-arrow-down-circle"></i>
-                  ${(weeklyLossAggressive * 2.20462).toFixed(1)} lbs/week
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    
-    resultDiv.classList.remove('d-none');
-    resultDiv.classList.add('fade-in');
   }
 }
 
